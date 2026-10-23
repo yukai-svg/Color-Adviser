@@ -54,7 +54,17 @@ nav {
 }
 
 .history-btn {
+    width: 90px;
+    height: 60px;
     background: #6d6d6d;
+    color: white;
+    border: none;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    text-decoration: none;
 }
 
 .login-btn {
