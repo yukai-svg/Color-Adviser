@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Adviser</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="header">
+    <div class="logo">
+        <span class="bar"></span>
+        <h1>Color Adviser</h1>
+    </div>
+
+    <nav>
+        <button class="history-btn">履歴</button>
+        <button class="login-btn">ログイン</button>
+    </nav>
+</header>
+
+<main>
+
+    <section class="hero">
+        <div class="badge">🎨 AIカラーパレット生成ツール</div>
+
+        <h2>
+            イメージから最適な<br>
+            カラーパレットを生成
+        </h2>
+
+        <p>
+            画像をアップロードするだけで、AIがあなたのプロジェクトに最適な配色を提案します。
+        </p>
+
+        <div class="steps">
+            <div class="step">
+                <span>1</span>
+                色を選ぼう！
+            </div>
+
+            <div class="arrow">→</div>
+
+            <div class="step">
+                <span>2</span>
+                イメージを入力
+            </div>
+
+            <div class="arrow">→</div>
+
+            <div class="step">
+                <span>3</span>
+                パレットを選ぼう！
+            </div>
+        </div>
+    </section>
+
+    <section class="tool-section">
+        <h3>ツールを使ってみる</h3>
+
+        <div class="upload-box">
+            <div class="upload-content">
+                <div class="upload-icon"><svg width="70" height="70" viewBox="0 0 24 24" fill="none">
+    <path d="M12 2V13" stroke="#C4C4C4" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M8 6L12 2L16 6" stroke="#C4C4C4" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M4 15V19C4 20.1 4.9 21 6 21H18C19.1 21 20 20.1 20 19V15"
+          stroke="#C4C4C4"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
+</svg></div>
+                <p>画像をドロップ、または</p>
+
+                <button class="upload-btn">
+                    画像ファイルをアップロード
+                </button>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <label>メインカラー：</label>
+            <input type="text" placeholder="#FFFFFF">
+
+            <label>イメージ：</label>
+            <input type="text" placeholder="〇〇のポスター">
+
+            <button class="decide-btn">確定</button>
+        </div>
+
+        <div class="generate-wrap">
+            <button class="generate-btn">
+                🎨 色を塗る
+            </button>
+        </div>
+    </section>
+
+</main>
+
+<footer class="footer">
+    <div>© 2026 Color Adviser</div>
+
+    <div class="footer-links">
+        <a href="#">プライバシー</a>
+        <a href="#">利用規約</a>
+    </div>
+</footer>
+
+<button class="top-btn">↑</button>
+
+</body>
+</html>
