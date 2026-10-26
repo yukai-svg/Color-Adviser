@@ -56,7 +56,16 @@ nav {
 }
 
 .home-btn {
+    width: 90px;
+    height: 60px;
     background: #707070;
+    color: white;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    text-decoration: none;
 }
 
 .login-btn {
@@ -143,21 +152,18 @@ nav {
 
 .top-btn {
     position: fixed;
-
     right: 24px;
-    bottom: 24px;
+    bottom: 80px; /* 24px → 80px に変更 */
 
     width: 56px;
     height: 56px;
 
-    border: none;
     border-radius: 50%;
+    border: none;
 
     background: #f6b118;
+    font-size: 20px;
 
     cursor: pointer;
-
-    font-size: 18px;
-
-    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    box-shadow: 0 3px 10px rgba(0,0,0,.2);
 }
