@@ -1,0 +1,169 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Yu Gothic", sans-serif;
+    background: #f3f3f3;
+    min-height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+}
+
+/* ===== Header ===== */
+
+.header {
+    height: 60px;
+    background: #ececec;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 0 24px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.bar {
+    width: 4px;
+    height: 30px;
+    background: #111;
+}
+
+.logo h1 {
+    font-size: 20px;
+}
+
+nav {
+    display: flex;
+}
+
+.home-btn,
+.login-btn {
+    width: 90px;
+    height: 60px;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+.home-btn {
+    width: 90px;
+    height: 60px;
+    background: #707070;
+    color: white;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    text-decoration: none;
+}
+
+.login-btn {
+    background: black;
+}
+
+/* ===== Main ===== */
+
+.history-container {
+    flex: 1;
+    padding: 40px;
+}
+
+.history-container h2 {
+    margin-bottom: 40px;
+    font-size: 32px;
+}
+
+/* ===== Empty ===== */
+
+.empty-history {
+    min-height: 400px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    color: #999;
+}
+
+.empty-icon {
+    font-size: 64px;
+    margin-bottom: 20px;
+}
+
+.empty-history p {
+    font-size: 22px;
+}
+
+/* ===== 履歴カード(将来用) ===== */
+
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.history-card {
+    background: white;
+    padding: 20px;
+
+    border-radius: 10px;
+
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+/* ===== Footer ===== */
+
+.footer {
+    border-top: 1px solid #ddd;
+
+    background: #f3f3f3;
+
+    padding: 18px 24px;
+
+    display: flex;
+    justify-content: space-between;
+
+    color: #999;
+}
+
+.footer-links {
+    display: flex;
+    gap: 15px;
+}
+
+.footer-links a {
+    text-decoration: none;
+    color: #999;
+}
+
+/* ===== TOP Button ===== */
+
+.top-btn {
+    position: fixed;
+    right: 24px;
+    bottom: 80px; /* 24px → 80px に変更 */
+
+    width: 56px;
+    height: 56px;
+
+    border-radius: 50%;
+    border: none;
+
+    background: #f6b118;
+    font-size: 20px;
+
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(0,0,0,.2);
+}
