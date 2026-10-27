@@ -61,25 +61,138 @@
     <section class="tool-section">
         <h3>ツールを使ってみる</h3>
 
-        <div class="upload-box">
-            <div class="upload-content">
-                <div class="upload-icon"><svg width="70" height="70" viewBox="0 0 24 24" fill="none">
-    <path d="M12 2V13" stroke="#C4C4C4" stroke-width="1.8" stroke-linecap="round"/>
-    <path d="M8 6L12 2L16 6" stroke="#C4C4C4" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+<div class="upload-box">
+
+    <!-- 通常表示 -->
+    <div class="upload-content">
+        <div class="upload-icon">
+
+<svg width="70" height="70" viewBox="0 0 24 24" fill="none">
+    <path d="M12 2V13"
+          stroke="#C4C4C4"
+          stroke-width="1.8"
+          stroke-linecap="round"/>
+
+    <path d="M8 6L12 2L16 6"
+          stroke="#C4C4C4"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
+
     <path d="M4 15V19C4 20.1 4.9 21 6 21H18C19.1 21 20 20.1 20 19V15"
           stroke="#C4C4C4"
           stroke-width="1.8"
           stroke-linecap="round"
           stroke-linejoin="round"/>
-</svg></div>
-                <p>画像をドロップ、または</p>
+</svg>
 
-                <button class="upload-btn">
-                    画像ファイルをアップロード
-                </button>
+</div>
+
+        <p>画像をドロップ、または</p>
+
+        <button class="upload-btn">
+            画像ファイルをアップロード
+        </button>
+    </div>
+
+    <!-- ロード中表示 -->
+    <div class="loading-content">
+        <div class="spinner"></div>
+
+        <h3>カラーパレットを生成中...</h3>
+
+        <p>
+            AIが画像の色を分析しています。<br>
+            そのまましばらくお待ちください。
+        </p>
+
+        <p class="complete-msg">
+            ✓ 画像のアップロードが完了しました
+        </p>
+    </div>
+
+<!-- 結果表示 -->
+<div class="palette-content">
+
+    <div class="result-image">
+        ここに画像
+    </div>
+
+    <div class="palette-list">
+
+        <button class="palette-btn">
+    補色パレット：
+    <span class="color-box"></span>
+    <span class="color-box"></span>
+    <span class="color-box"></span>
+</button>
+
+        <button class="palette-btn">
+            類似色パレット：
+            <span class="color-box"></span>
+    <span class="color-box"></span>
+    <span class="color-box"></span>
+        </button>
+
+        <button class="palette-btn">
+            三色配色パレット：
+            <span class="color-box"></span>
+    <span class="color-box"></span>
+    <span class="color-box"></span>
+        </button>
+
+    </div>
+
+</div>
+<div class="coloring-content">
+
+    <div class="spinner"></div>
+
+    <h3>カラー着色中...</h3>
+
+    <p>
+        AIが画像を着色しています。<br>
+        そのまましばらくお待ちください。
+    </p>
+
+    <p class="complete-msg">
+        ✓ 選択したパレットを適用しました
+    </p>
+
+</div>
+<!-- 着色結果 -->
+<div class="colored-result-content">
+
+    <div class="result-images">
+
+        <div class="before-image">
+            <p>着色前</p>
+
+            <div class="image-box">
+                画像
             </div>
         </div>
 
+        <div class="after-image">
+            <p>着色後</p>
+
+            <div class="image-box">
+                画像
+            </div>
+        </div>
+
+    </div>
+
+    <div class="selected-palette">
+        <span>使用パレット：</span>
+
+        <div class="color-box"></div>
+        <div class="color-box"></div>
+        <div class="color-box"></div>
+    </div>
+
+</div>
+</div>
         <div class="form-row">
             <label>メインカラー：</label>
             <input type="text" placeholder="#FFFFFF">
@@ -109,6 +222,7 @@
 </footer>
 
 <button class="top-btn">↑</button>
+
 
 </body>
 </html>

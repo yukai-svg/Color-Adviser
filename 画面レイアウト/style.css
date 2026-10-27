@@ -41,11 +41,10 @@ nav {
 .logo h1 {
     font-size: 20px;
     font-weight: 700;
+    line-height: 1;
 }
 
-nav {
-    display: flex;
-}
+
 
 .history-btn,
 .login-btn {
@@ -61,22 +60,14 @@ nav {
 }
 
 .history-btn {
-    width: 90px;
-    height: 60px;
     background: #6d6d6d;
-    color: white;
-    border: none;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    text-decoration: none;
 }
 
 .login-btn {
     background: #000;
+    color: white;
 }
+
 
 /* ===== Hero ===== */
 
@@ -166,11 +157,9 @@ nav {
 .upload-box {
     background: #ececec;
     border-radius: 12px;
-    height: 220px;
+    min-height: 220px;
     border: 1px solid #ddd;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    padding: 20px;
 }
 
 .upload-content {
@@ -203,6 +192,133 @@ nav {
     border: none;
     border-radius: 24px;
     cursor: pointer;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.loading-content,
+.palette-content,
+.coloring-content,
+.colored-result-content {
+    display: none;
+}
+
+.palette-content {
+    width: 100%;
+    text-align: center;
+}
+.loading-content,
+.coloring-content {
+    width: 100%;
+    text-align: center;
+    padding: 30px 20px;
+}
+
+.result-image {
+    width: 300px;
+    height: 180px;
+
+    margin: 0 auto;
+
+    border: 1px solid #ccc;
+    background: white;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.palette-list {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+.palette-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+}
+
+.palette-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    padding: 4px 10px;
+
+    font-size: 12px;
+
+    background: white;
+
+    border: 1px solid #ccc;
+    border-radius: 5px;
+
+    cursor: pointer;
+}
+
+.result-images {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+
+    margin-top: 20px;
+}
+.image-box {
+    width: 180px;
+    height: 120px;
+    overflow: hidden;
+    border: 1px solid #ccc;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: white;
+}
+.selected-palette {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    gap: 5px;
+
+    margin-top: 20px;
+}
+.color-box {
+    width: 18px;
+    height: 18px;
+
+    border: 1px solid #999;
+    border-radius: 2px;
+
+    background: #fff;
+}
+.spinner {
+    width: 40px;
+    height: 40px;
+
+    margin: 0 auto 20px;
+
+    border: 4px solid #ddd;
+    border-top: 4px solid #666;
+
+    border-radius: 50%;
+
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .form-row {
@@ -271,7 +387,7 @@ nav {
 .top-btn {
     position: fixed;
     right: 24px;
-    bottom: 80px; /* 24px → 80px に変更 */
+    bottom: 80px;
 
     width: 56px;
     height: 56px;
