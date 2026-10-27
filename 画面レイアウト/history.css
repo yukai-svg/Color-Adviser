@@ -26,6 +26,12 @@ body {
     padding: 0 24px;
 }
 
+nav {
+    display: flex;
+    gap: 0;
+}
+
+
 .logo {
     display: flex;
     align-items: center;
@@ -42,10 +48,6 @@ body {
     font-size: 20px;
 }
 
-nav {
-    display: flex;
-}
-
 .home-btn,
 .login-btn {
     width: 90px;
@@ -56,20 +58,12 @@ nav {
 }
 
 .home-btn {
-    width: 90px;
-    height: 60px;
     background: #707070;
-    color: white;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    text-decoration: none;
 }
 
 .login-btn {
-    background: black;
+    background: #000;
+
 }
 
 /* ===== Main ===== */
