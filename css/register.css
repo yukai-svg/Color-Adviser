@@ -1,0 +1,217 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Yu Gothic", sans-serif;
+    min-height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+}
+.header {
+    height: 60px;
+    background: #ececec;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 0 24px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.bar {
+    width: 5px;
+    height: 34px;
+    background: #111;
+}
+
+.logo h1 {
+    font-size: 20px;
+    font-weight: 700;
+}
+nav {
+    display: flex;
+}
+.home-btn,
+.login-btn {
+    width: 90px;
+    height: 60px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    text-decoration: none;
+    color: white;
+}
+.home-btn {
+    background: #6d6d6d;
+}
+
+.login-btn {
+    background: #000;
+}
+.footer {
+    border-top: 1px solid #ddd;
+
+    background: rgba(255,255,255,.6);
+
+    padding: 18px 24px;
+
+    display: flex;
+    justify-content: space-between;
+
+    color: #999;
+}
+.footer-links {
+    display: flex;
+    gap: 20px;
+}
+.footer-links a {
+    color: #999;
+    text-decoration: none;
+}
+.register-page h2 {
+    font-size: 52px;
+    margin-top: 15px;
+}
+.subtitle {
+    margin-top: 10px;
+    margin-bottom: 25px;
+
+    color: #888;
+    font-size: 14px;
+}
+.badge {
+    display: inline-block;
+
+    padding: 8px 18px;
+
+    border-radius: 50px;
+
+    border: 1px solid #d8b44d;
+
+    background: rgba(255,255,255,.4);
+
+    color: #8c6f22;
+
+    font-size: 13px;
+}
+.register-page {
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    padding: 20px 0 40px;
+
+    background: linear-gradient(
+        135deg,
+        #f0d7cc 0%,
+        #efe2c5 45%,
+        #bddedb 100%
+    );
+}
+.register-card {
+    width: 420px;
+
+    background: rgba(255,255,255,0.75);
+
+    border-radius: 12px;
+
+    padding: 18px 18px 25px;
+
+    margin-top: 20px;
+}
+.register-card label {
+    display: block;
+
+    margin-top: 15px;
+    margin-bottom: 8px;
+
+    font-size: 13px;
+    font-weight: bold;
+}
+.register-card input[type="email"],
+.register-card input[type="password"] {
+    width: 100%;
+    height: 40px;
+
+    padding: 0 12px;
+
+    border: 1px solid #bcbcbc;
+    border-radius: 5px;
+}
+.register-btn {
+    width: 100%;
+    height: 44px;
+
+    margin-top: 18px;
+
+    border: none;
+    border-radius: 24px;
+
+    background: #2f2f2f;
+    color: white;
+
+    cursor: pointer;
+
+    font-weight: bold;
+}
+.divider {
+    height: 1px;
+    background: #ddd;
+    margin: 25px 0;
+}
+.login-text {
+    text-align: center;
+
+    font-size: 11px;
+    color: #999;
+}
+.login-link {
+    display: block;
+
+    text-align: center;
+
+    margin-top: 10px;
+
+    color: black;
+    font-weight: bold;
+
+    text-decoration: none;
+}
+.back-home {
+    margin-top: 20px;
+
+    color: #888;
+    text-decoration: none;
+
+    font-size: 13px;
+}
+.password-note {
+    margin-top: 6px;
+
+    font-size: 11px;
+    color: #888;
+}
+.agree {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    margin-top: 12px;
+
+    font-size: 11px;
+    font-weight: normal !important;
+}
