@@ -1,0 +1,236 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Yu Gothic", sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background:
+        linear-gradient(
+            135deg,
+            #f0d7cc 0%,
+            #efe2c5 45%,
+            #bddedb 100%
+        );
+}
+
+/* ===== Header ===== */
+
+.header {
+    height: 60px;
+    background: #ececec;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 0 24px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.bar {
+    width: 5px;
+    height: 34px;
+    background: #111;
+}
+
+.logo h1 {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+nav {
+    display: flex;
+}
+
+.history-btn,
+.login-btn {
+    width: 90px;
+    height: 60px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    text-decoration: none;
+    color: white;
+}
+
+.history-btn {
+    background: #6d6d6d;
+}
+
+.login-btn {
+    background: #000;
+}
+
+/* ===== Main ===== */
+
+.login-page {
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    padding-top: 30px;
+}
+
+.badge {
+    display: inline-block;
+
+    padding: 8px 18px;
+
+    border-radius: 50px;
+
+    background: rgba(255,255,255,0.3);
+
+    border: 1px solid #d8b44d;
+
+    color: #7f6b30;
+
+    font-size: 13px;
+}
+
+.login-page h2 {
+    font-size: 56px;
+    margin-top: 20px;
+}
+
+.subtitle {
+    color: #8a8a8a;
+    margin-top: 10px;
+    margin-bottom: 30px;
+}
+
+/* ===== Card ===== */
+
+.login-card {
+    width: 420px;
+
+    background: rgba(255,255,255,0.8);
+
+    border-radius: 16px;
+
+    padding: 24px;
+}
+
+.login-card label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.login-card input[type="email"],
+.login-card input[type="password"] {
+    width: 100%;
+    height: 42px;
+
+    padding: 0 12px;
+
+    border: 1px solid #bbb;
+    border-radius: 5px;
+
+    margin-bottom: 20px;
+}
+
+.login-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    font-size: 12px;
+
+    margin-bottom: 20px;
+}
+
+.remember {
+    display: flex !important;
+    align-items: center;
+    gap: 5px;
+    font-weight: normal !important;
+}
+
+.login-options a {
+    color: #888;
+    text-decoration: none;
+}
+
+.login-submit {
+    width: 100%;
+    height: 46px;
+
+    border: none;
+    border-radius: 24px;
+
+    background: #2f2f2f;
+    color: white;
+
+    cursor: pointer;
+}
+
+.divider {
+    height: 1px;
+    background: #ddd;
+    margin: 25px 0;
+}
+
+.register-text {
+    text-align: center;
+    color: #999;
+    font-size: 12px;
+}
+
+.register-link {
+    display: block;
+    text-align: center;
+
+    margin-top: 10px;
+
+    color: #000;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.back-home {
+    margin-top: 25px;
+
+    color: #888;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+/* ===== Footer ===== */
+
+.footer {
+    border-top: 1px solid #ddd;
+
+    background: rgba(255,255,255,0.6);
+
+    padding: 18px 24px;
+
+    display: flex;
+    justify-content: space-between;
+
+    color: #999;
+}
+
+.footer-links {
+    display: flex;
+    gap: 20px;
+}
+
+.footer-links a {
+    color: #999;
+    text-decoration: none;
+}
