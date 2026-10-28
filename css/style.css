@@ -1,3 +1,6 @@
+html {
+    font-size: 18px;
+}
 * {
     margin: 0;
     padding: 0;
@@ -26,6 +29,30 @@ nav {
     display: flex;
     gap: 0;
 }
+.font-btn {
+    width: 50px;
+    height: 60px;
+
+    border: none;
+
+    background: #9a9a9a;
+    color: white;
+
+    cursor: pointer;
+}
+
+.font-btn:hover {
+    background: #777;
+}
+.font-size-area {
+    display: flex;
+    align-items: center;
+}
+
+.font-size-area span {
+    padding: 0 10px;
+    font-size: 14px;
+}
 .logo {
     display: flex;
     align-items: center;
@@ -39,7 +66,7 @@ nav {
 }
 
 .logo h1 {
-    font-size: 20px;
+    font-size: 1.25rem;
     font-weight: 700;
     line-height: 1;
 }
@@ -90,13 +117,13 @@ nav {
     border: 1px solid #d8b44d;
     border-radius: 50px;
     padding: 8px 18px;
-    font-size: 14px;
+    font-size: 0.875rem;
     color: #7f6b30;
     margin-bottom: 28px;
 }
 
 .hero h2 {
-    font-size: 58px;
+    font-size: 3.6rem;
     font-weight: bold;
     line-height: 1.3;
 }
@@ -104,10 +131,11 @@ nav {
 .hero p {
     margin-top: 30px;
     color: #7a7a7a;
-    font-size: 20px;
+    font-size: 1.4rem;
 }
 
 .steps {
+    font-size: 1.1rem;
     margin-top: 50px;
     display: flex;
     justify-content: center;
@@ -139,33 +167,47 @@ nav {
 
 .arrow {
     color: #999;
-    font-size: 24px;
+     font-size: 1.5rem;
 }
 
 /* ===== Tool Section ===== */
 
 .tool-section {
-    padding: 40px 24px 80px;
+    padding: 40px 24px 30px;
     background: #f6f6f6;
 }
 
 .tool-section h3 {
-    font-size: 36px;
+    font-size: 2.25rem;
     margin-bottom: 25px;
 }
 
 .upload-box {
-    background: #ececec;
+   background: #ececec;
     border-radius: 12px;
-    min-height: 220px;
+
+    max-width: 900px;
+    min-height: 380px;
+
+    margin: 0 auto;
+
     border: 1px solid #ddd;
-    padding: 20px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .upload-content {
+   height: 100%;
+
     display: flex;
     flex-direction: column;
+
+    justify-content: center;
     align-items: center;
+
+    text-align: center;
 }
 
 .upload-icon {
@@ -182,6 +224,8 @@ nav {
 .upload-content p {
     color: #888;
     margin: 10px 0 20px;
+
+    font-size: 1.1rem;
 }
 
 .upload-btn {
@@ -250,7 +294,7 @@ nav {
 
     padding: 4px 10px;
 
-    font-size: 12px;
+    font-size: 0.75rem;
 
     background: white;
 
@@ -331,14 +375,19 @@ nav {
 }
 
 .form-row input {
-    width: 140px;
-    height: 34px;
+    width: 180px;
+    height: 42px;
+
     padding: 0 10px;
+
+    font-size: 1rem;
 }
 
 .decide-btn {
-    width: 70px;
-    height: 34px;
+    width: 90px;
+    height: 42px;
+
+    font-size: 1rem;
     border: none;
     border-radius: 20px;
     background: #8f8f83;
@@ -352,8 +401,11 @@ nav {
 }
 
 .generate-btn {
-    margin-top: 35px;
-    padding: 15px 42px;
+   margin-top: 35px;
+
+    padding: 18px 55px;
+
+    font-size: 1.1rem;
     border: none;
     border-radius: 30px;
     background: #333;
@@ -386,8 +438,9 @@ nav {
 
 .top-btn {
     position: fixed;
+
     right: 24px;
-    bottom: 80px;
+    bottom: 140px;
 
     width: 56px;
     height: 56px;

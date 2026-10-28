@@ -1,3 +1,6 @@
+html {
+    font-size: 18px;
+}
 * {
     margin: 0;
     padding: 0;
@@ -7,6 +10,9 @@
 body {
     font-family: "Yu Gothic", sans-serif;
     background: #f3f3f3;
+    color: #222;
+
+    overflow-y: auto;
     min-height: 100vh;
 
     display: flex;
@@ -30,6 +36,30 @@ nav {
     display: flex;
     gap: 0;
 }
+.font-size-area {
+    display: flex;
+    align-items: center;
+}
+
+.font-size-area span {
+    padding: 0 10px;
+    font-size: 14px;
+}
+.font-btn {
+    width: 50px;
+    height: 60px;
+
+    border: none;
+
+    background: #9a9a9a;
+    color: white;
+
+    cursor: pointer;
+}
+
+.font-btn:hover {
+    background: #777;
+}
 
 
 .logo {
@@ -39,14 +69,15 @@ nav {
 }
 
 .bar {
-    width: 4px;
-    height: 30px;
+    width: 5px;
+    height: 34px;
     background: #111;
 }
 
 .logo h1 {
-    font-size: 20px;
+    font-size: 1.25rem;
     font-weight: 700;
+    line-height: 1;
 }
 
 .home-btn,
@@ -81,8 +112,8 @@ nav {
 }
 
 .history-container h2 {
-    margin-bottom: 40px;
-    font-size: 32px;
+    margin-bottom: 25px;
+    font-size: 2.25rem;
 }
 
 /* ===== Empty ===== */
@@ -100,7 +131,7 @@ nav {
 
 
 .empty-history p {
-    font-size: 22px;
+    font-size: 1.4rem;
 }
 
 /* ===== 履歴カード(将来用) ===== */
@@ -151,7 +182,7 @@ nav {
 .top-btn {
     position: fixed;
     right: 24px;
-    bottom: 80px; /* 24px → 80px に変更 */
+    bottom: 140px;
 
     width: 56px;
     height: 56px;
