@@ -81,7 +81,18 @@ nav {
 }
 
 .home-btn,
-.login-btn {
+.logout-btn,
+.settings-btn{
+  width: 96px;
+    height: 60px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    text-decoration: none;
+}
+.settings-btn {
     width: 90px;
     height: 60px;
 
@@ -90,15 +101,20 @@ nav {
     align-items: center;
 
     text-decoration: none;
-    color: white;
-}
 
+    background: #a3a3a3;
+    color: white;
+
+    font-weight: bold;
+}
 .home-btn {
     background: #707070;
+     color: white;
 }
 
-.login-btn {
+.logout-btn {
     background: #000;
+     color: white;
 }
 
 /* ===== Main ===== */

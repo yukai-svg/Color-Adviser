@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>設定 | Color Adviser</title>
+    <link rel="stylesheet" href="/css/settings.css">
+</head>
+<body>
+
+<header class="header">
+    <div class="logo">
+        <span class="bar"></span>
+        <h1>Color Adviser</h1>
+    </div>
+
+    <nav>
+        <a href="index.html" class="home-btn">HOME</a>
+        <a href="history.html" class="history-btn">履歴</a>
+        <a href="#" class="logout-btn">ログアウト</a>
+        
+    </nav>
+</header>
+
+<main class="settings-page">
+
+    <div class="badge">
+        🎨 AIカラーパレット生成ツール
+    </div>
+
+    <h2>設定</h2>
+
+    <p class="subtitle">
+        あなたに合わせた詳細設定を。
+    </p>
+
+    <div class="settings-card">
+
+        <section class="setting-section">
+            <h3>アカウント</h3>
+
+            <div class="setting-row">
+                <div>
+                    <label>ユーザID</label>
+                    <p>自動採番されたIDです。変更はできません。</p>
+                </div>
+
+                <input type="text" value="000123" readonly>
+            </div>
+
+            <div class="setting-row">
+                <div>
+                    <label>ユーザー名</label>
+                    <p>表示するユーザー名を変更できます。</p>
+                </div>
+
+                <input type="text" value="color_user">
+            </div>
+
+            <div class="setting-row">
+                <div>
+                    <label>パスワード</label>
+                    <p>現在のパスワードを新しいものに変更します。</p>
+                </div>
+
+                <button class="change-btn">
+                    パスワードを変更
+                </button>
+            </div>
+        </section>
+
+        <hr>
+
+        <section class="setting-section">
+            <h3>表示</h3>
+
+            <div class="setting-row">
+                <div>
+                    <label>文字サイズ</label>
+                    <p>画面に表示する文字の大きさを選択します。</p>
+                </div>
+
+                <div class="option-group">
+                    <button>小</button>
+                    <button class="active">標準</button>
+                    <button>大</button>
+                </div>
+            </div>
+
+            <div class="setting-row">
+                <div>
+                    <label>カラーテーマ</label>
+                    <p>画面の明るさを選択します。</p>
+                </div>
+
+                <div class="option-group">
+                    <button class="active">ライト</button>
+                    <button>ダーク</button>
+                </div>
+            </div>
+
+        </section>
+
+        <hr>
+
+        <section class="setting-section">
+
+            <h3>履歴</h3>
+
+            <div class="setting-row">
+
+                <div>
+                    <label>生成履歴を自動保存</label>
+                    <p>生成したパレットを履歴に残します。</p>
+                </div>
+
+                <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+
+            </div>
+
+        </section>
+
+    </div>
+
+    <div class="button-area">
+
+        <button class="reset-btn">
+            初期設定に戻す
+        </button>
+
+        <button class="save-btn">
+            設定を保存
+        </button>
+
+    </div>
+
+    <a href="index.html" class="back-home">
+        ← ホームに戻る
+    </a>
+
+</main>
+
+<footer class="footer">
+
+    <div>© 2026 Color Adviser</div>
+
+    <div class="footer-links">
+        <a href="privacy.html">プライバシー</a>
+        <a href="terms.html">利用規約</a>
+    </div>
+
+</footer>
+
+</body>
+</html>
