@@ -1,0 +1,296 @@
+html {
+    font-size: 18px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    font-family:"Yu Gothic",sans-serif;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    background:#f3f3f3;
+}
+
+/* Header */
+
+.header{
+    height:60px;
+    background:#ececec;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:0 24px;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.bar{
+    width:5px;
+    height:34px;
+    background:#111;
+}
+
+.logo h1{
+    font-size:1.25rem;
+}
+
+nav{
+    display:flex;
+}
+
+.history-btn,
+.logout-btn,
+.home-btn{
+    width:90px;
+    height:60px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    text-decoration:none;
+    color:white;
+}
+
+.history-btn{
+    background:#6d6d6d;
+}
+
+.logout-btn{
+    background:#000;
+}
+
+.home-btn {
+    background: #a3a3a3;
+}
+
+/* Main */
+
+.settings-page{
+    flex:1;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+
+    padding:25px;
+    background:
+    linear-gradient(
+        135deg,
+        #f7edd1 0%,
+        #f3ebda 45%,
+        #fbffff 100%
+    );
+}
+
+.badge{
+    padding:8px 18px;
+
+    border-radius:40px;
+
+    border:1px solid #d8b44d;
+
+    background:rgba(255,255,255,.4);
+
+    color:#8c6f22;
+}
+
+.settings-page h2{
+    margin-top:15px;
+    font-size:3rem;
+}
+
+.subtitle{
+    margin-top:10px;
+    color:#888;
+}
+
+/* Card */
+
+.settings-card{
+    width:900px;
+    max-width:95%;
+
+    background:rgba(255,255,255,.75);
+
+    margin-top:30px;
+
+    padding:25px;
+
+    border-radius:20px;
+}
+
+.setting-section h3{
+    margin-bottom:20px;
+}
+
+.setting-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin-bottom:25px;
+}
+
+.setting-row label{
+    font-weight:bold;
+}
+
+.setting-row p{
+    color:#888;
+    font-size:.8rem;
+    margin-top:5px;
+}
+
+.setting-row input{
+    width:240px;
+    height:42px;
+
+    border:1px solid #ddd;
+
+    border-radius:8px;
+
+    padding:0 15px;
+}
+
+.change-btn{
+    width:240px;
+    height:42px;
+
+    border:none;
+
+    border-radius:8px;
+
+    background:#efefef;
+}
+
+.option-group{
+    display:flex;
+}
+
+.option-group button{
+    width:70px;
+    height:36px;
+
+    border:none;
+    background:#ececec;
+}
+
+.option-group .active{
+    background:#333;
+    color:white;
+}
+
+hr{
+    margin:25px 0;
+    border:none;
+    border-top:1px solid #ddd;
+}
+
+/* Switch */
+
+.switch{
+    position:relative;
+    width:55px;
+    height:30px;
+}
+
+.switch input{
+    display:none;
+}
+
+.slider{
+    position:absolute;
+    width:55px;
+    height:30px;
+    background:#333;
+    border-radius:30px;
+}
+
+.slider::before{
+    content:"";
+    position:absolute;
+
+    width:24px;
+    height:24px;
+
+    left:3px;
+    top:3px;
+
+    background:white;
+    border-radius:50%;
+}
+
+/* Buttons */
+
+.button-area{
+    display:flex;
+    gap:20px;
+    margin-top:25px;
+}
+
+.reset-btn{
+    width:180px;
+    height:50px;
+
+    border:1px solid #ccc;
+
+    border-radius:30px;
+
+    background:white;
+}
+
+.save-btn{
+    width:180px;
+    height:50px;
+
+    border:none;
+
+    border-radius:30px;
+
+    background:#333;
+    color:white;
+}
+
+.back-home{
+    margin-top:20px;
+
+    text-decoration:none;
+    color:#888;
+}
+
+/* Footer */
+
+.footer{
+    border-top:1px solid #ddd;
+
+    background:#f3f3f3;
+
+    padding:18px 24px;
+
+    display:flex;
+    justify-content:space-between;
+
+    color:#999;
+}
+
+.footer-links{
+    display:flex;
+    gap:20px;
+}
+
+.footer-links a{
+    text-decoration:none;
+    color:#999;
+}
