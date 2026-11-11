@@ -469,3 +469,94 @@ nav {
     cursor: pointer;
     box-shadow: 0 3px 10px rgba(0,0,0,.2);
 }
+/* ===== Dark Mode ===== */
+
+.dark-mode {
+    background: #252525;
+    color: white;
+}
+.dark-mode .header {
+    background: #2f2f2f;
+}
+
+.dark-mode .logo h1 {
+    color: white;
+}
+
+.dark-mode .bar {
+    background: white;
+}
+.dark-mode .hero {
+    background:
+        linear-gradient(
+            135deg,
+            #817159 0%,
+            #664b46 45%,
+            #3e4855 100%
+        );
+}
+.dark-mode .badge {
+    background: rgba(255,255,255,.08);
+
+    border: 1px solid #f0cf6b;
+
+    color: #f7e18f;
+}
+.dark-mode .hero p {
+    color: #d0d0d0;
+}
+.dark-mode .step {
+    background: #6e6e6e;
+    color: white;
+}
+
+.dark-mode .step span {
+    background: #363636;
+}
+.dark-mode .tool-section {
+    background: #2a2a2a;
+}
+.dark-mode .tool-section h3 {
+    color: white;
+}
+.dark-mode .upload-box {
+    background: #464646;
+    border-color: #a5a5a5;
+}
+.dark-mode .upload-content p {
+    color: #d0d0d0;
+}
+.dark-mode .upload-btn,
+.dark-mode .decide-btn {
+    background: #154f9b;
+}
+.dark-mode .generate-btn {
+    background: #154f9b;
+}
+.dark-mode input {
+    background: #4a4a4a;
+    color: white;
+
+    border: 1px solid #666;
+}
+.dark-mode .palette-btn {
+    background: #444;
+    color: white;
+
+    border-color: #666;
+}
+.dark-mode .image-box,
+.dark-mode .result-image {
+    background: #444;
+    border-color: #666;
+
+    color: white;
+}
+.dark-mode .footer {
+    background: #222;
+    color: #ccc;
+}
+
+.dark-mode .footer-links a {
+    color: #ccc;
+}

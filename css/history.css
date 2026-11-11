@@ -212,3 +212,56 @@ nav {
     cursor: pointer;
     box-shadow: 0 3px 10px rgba(0,0,0,.2);
 }
+/* ===== Dark Mode ===== */
+
+.dark-mode {
+    background: #252525;
+    color: white;
+}
+.dark-mode .header {
+    background: #2f2f2f;
+}
+
+.dark-mode .logo h1 {
+    color: white;
+}
+
+.dark-mode .bar {
+    background: white;
+}
+
+.dark-mode .font-size-area span {
+    color: white;
+}
+.dark-mode .history-container {
+    background: #2a2a2a;
+}
+.dark-mode .history-container h2 {
+    color: white;
+}
+.dark-mode .empty-history {
+    color: #d0d0d0;
+}
+.dark-mode .empty-history p {
+    color: #d0d0d0;
+}
+.dark-mode .history-card {
+    background: #3a3a3a;
+
+    color: white;
+
+    box-shadow: none;
+
+    border: 1px solid #555;
+}
+.dark-mode .footer {
+    background: #222;
+
+    color: #ccc;
+}
+.dark-mode .footer-links a {
+    color: #ccc;
+}
+.dark-mode .top-btn {
+    background: #d89f12;
+}
