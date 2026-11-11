@@ -63,9 +63,9 @@
                     <p>現在のパスワードを新しいものに変更します。</p>
                 </div>
 
-                <button class="change-btn">
-                    パスワードを変更
-                </button>
+                <button class="change-btn" id="openModal">
+    パスワードを変更
+</button>
             </div>
         </section>
 
@@ -142,7 +142,38 @@
     </a>
 
 </main>
+<!-- パスワード変更モーダル -->
+<div class="modal" id="passwordModal">
 
+    <div class="modal-content">
+
+        <h3>パスワード変更</h3>
+
+        <label>新しいパスワード</label>
+        <input
+            type="password"
+            placeholder="新しいパスワードを入力">
+
+        <label>確認用パスワード</label>
+        <input
+            type="password"
+            placeholder="もう一度入力">
+
+        <div class="modal-buttons">
+
+            <button class="cancel-btn">
+                キャンセル
+            </button>
+
+            <button class="save-btn">
+                変更
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
 <footer class="footer">
 
     <div>© 2026 Color Adviser</div>
@@ -153,6 +184,6 @@
     </div>
 
 </footer>
-
+<script src="/js/settings.js"></script>
 </body>
 </html>
