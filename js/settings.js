@@ -16,6 +16,7 @@ document
         modal.style.display = "none";
 
     });
+
 const root = document.documentElement;
 
 /* ===== 文字サイズ ===== */
@@ -36,49 +37,23 @@ function setFontActive(button) {
     largeBtn.classList.remove("active");
 
     button.classList.add("active");
+
 }
 
-smallBtn.addEventListener("click", () => {
-
-    root.style.fontSize = "14px";
-
-    localStorage.setItem(
-        "fontSize",
-        "14px"
-    );
-
-    setFontActive(smallBtn);
-
-});
-
-mediumBtn.addEventListener("click", () => {
-
-    root.style.fontSize = "18px";
-
-    localStorage.setItem(
-        "fontSize",
-        "18px"
-    );
-
-    setFontActive(mediumBtn);
-
-});
-
-largeBtn.addEventListener("click", () => {
-
-    root.style.fontSize = "22px";
-
-    localStorage.setItem(
-        "fontSize",
-        "22px"
-    );
-
-    setFontActive(largeBtn);
-
-});
+/* 保存済み文字サイズ取得 */
 
 const savedSize =
     localStorage.getItem("fontSize");
+
+/* 実際の文字サイズ適用 */
+
+if (savedSize) {
+
+    root.style.fontSize = savedSize;
+
+}
+
+/* ボタン状態復元 */
 
 if (savedSize === "14px") {
 
@@ -93,6 +68,51 @@ if (savedSize === "14px") {
     setFontActive(mediumBtn);
 
 }
+
+/* 小 */
+
+smallBtn.addEventListener("click", () => {
+
+    root.style.fontSize = "14px";
+
+    localStorage.setItem(
+        "fontSize",
+        "14px"
+    );
+
+    setFontActive(smallBtn);
+
+});
+
+/* 標準 */
+
+mediumBtn.addEventListener("click", () => {
+
+    root.style.fontSize = "18px";
+
+    localStorage.setItem(
+        "fontSize",
+        "18px"
+    );
+
+    setFontActive(mediumBtn);
+
+});
+
+/* 大 */
+
+largeBtn.addEventListener("click", () => {
+
+    root.style.fontSize = "22px";
+
+    localStorage.setItem(
+        "fontSize",
+        "22px"
+    );
+
+    setFontActive(largeBtn);
+
+});
 
 /* ===== ダークモード ===== */
 
@@ -147,6 +167,10 @@ if (savedTheme === "dark") {
     lightBtn.classList.remove("active");
 
 } else {
+
+    document.body.classList.remove(
+        "dark-mode"
+    );
 
     lightBtn.classList.add("active");
     darkBtn.classList.remove("active");
