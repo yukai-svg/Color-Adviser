@@ -254,6 +254,11 @@ nav{
 
 .option-group{
     display:flex;
+     margin-left: auto;
+
+    min-width: 200px;
+
+    justify-content: flex-end;
 }
 
 .option-group button{
@@ -268,7 +273,10 @@ nav{
     background:#333;
     color:white;
 }
-
+.option-group button:hover {
+    background: #333;
+    color: white;
+}
 hr{
     margin:25px 0;
     border:none;
@@ -370,4 +378,80 @@ hr{
 .footer-links a{
     text-decoration:none;
     color:#999;
+}
+.dark-mode .settings-card {
+    background: #333;
+    color: white;
+}
+.dark-mode .setting-row p {
+    color: #ccc;
+}
+.dark-mode .footer {
+    background: #222;
+    color: #ccc;
+}
+.dark-mode .footer a {
+    color: #ccc;
+}
+.dark-mode {
+    background: #252525;
+    color: white;
+}
+.dark-mode .header {
+    background: #2f2f2f;
+}
+.dark-mode .logo h1 {
+    color: white;
+}
+
+.dark-mode .bar {
+    background: white;
+}
+.dark-mode .settings-page {
+    background:
+    linear-gradient(
+        135deg,
+        #3c352c 0%,
+        #4b4438 45%,
+        #2f2a23 100%
+    );
+}
+.dark-mode input {
+    background: #4a4a4a;
+    color: white;
+
+    border: 1px solid #666;
+}
+.dark-mode .change-btn {
+    background: #555;
+    color: white;
+}
+.dark-mode .reset-btn {
+    background: #444;
+    color: white;
+
+    border-color: #666;
+}
+.dark-mode hr {
+    border-top: 1px solid #555;
+}
+.dark-mode .modal-content {
+    background: #333;
+    color: white;
+}
+.dark-mode .badge {
+    background: rgba(255,255,255,.1);
+
+    border: 1px solid #d8b44d;
+
+    color: #f0cf6b;
+}
+.dark-mode .subtitle {
+    color: #d0d0d0;
+}
+.dark-mode .setting-section h3 {
+    color: white;
+}
+.dark-mode .setting-row label {
+    color: white;
 }

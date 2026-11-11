@@ -71,33 +71,57 @@
 
         <hr>
 
-        <section class="setting-section">
-            <h3>表示</h3>
+      <section class="setting-section">
+    <h3>表示</h3>
 
-            <div class="setting-row">
-                <div>
-                    <label>文字サイズ</label>
-                    <p>画面に表示する文字の大きさを選択します。</p>
-                </div>
+    <div class="setting-row">
 
-                <div class="option-group">
-                    <button>小</button>
-                    <button class="active">標準</button>
-                    <button>大</button>
-                </div>
-            </div>
+        <div>
+            <label>文字サイズ</label>
+            <p>
+                画面に表示する文字の大きさを選択します。
+            </p>
+        </div>
 
-            <div class="setting-row">
-                <div>
-                    <label>カラーテーマ</label>
-                    <p>画面の明るさを選択します。</p>
-                </div>
+      <div class="option-group font-group">
 
-                <div class="option-group">
-                    <button class="active">ライト</button>
-                    <button>ダーク</button>
-                </div>
-            </div>
+    <button id="font-small">小</button>
+
+    <button id="font-medium">
+        標準
+    </button>
+
+    <button id="font-large">
+        大
+    </button>
+
+</div>
+
+    </div>
+
+    <div class="setting-row">
+
+        <div>
+            <label>カラーテーマ</label>
+            <p>画面の明るさを選択します。</p>
+        </div>
+
+<div class="option-group theme-group">
+
+    <button id="light-theme" class="active">
+        ライト
+    </button>
+
+    <button id="dark-theme">
+        ダーク
+    </button>
+
+</div>
+
+    </div>
+
+
+
 
         </section>
 
@@ -185,5 +209,6 @@
 
 </footer>
 <script src="/js/settings.js"></script>
+<script src="/js/fontsize.js"></script>
 </body>
 </html>
