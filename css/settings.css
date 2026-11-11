@@ -165,9 +165,9 @@ nav{
     background:
     linear-gradient(
         135deg,
-        #f7edd1 0%,
-        #f3ebda 45%,
-        #fbffff 100%
+        #e4d9bb 0%,
+        #cec1a4 45%,
+        #bbd1d1 100%
     );
 }
 
@@ -249,7 +249,7 @@ nav{
 
     border-radius:8px;
 
-    background:#efefef;
+    background:#d6d6d6;
 }
 
 .option-group{
@@ -266,15 +266,15 @@ nav{
     height:36px;
 
     border:none;
-    background:#ececec;
+    background:#ffffff;
 }
 
 .option-group .active{
-    background:#333;
+    background:#818181;
     color:white;
 }
 .option-group button:hover {
-    background: #333;
+    background:#a0a0a0;
     color: white;
 }
 hr{
@@ -299,7 +299,7 @@ hr{
     position:absolute;
     width:55px;
     height:30px;
-    background:#333;
+    background:#3171e7;
     border-radius:30px;
 }
 
@@ -427,8 +427,14 @@ hr{
     color: white;
 }
 .dark-mode .reset-btn {
-    background: #444;
-    color: white;
+    background: #fffefe;
+    color: rgb(0, 0, 0);
+
+    border-color: #666;
+}
+.dark-mode .save-btn {
+    background:  #154f9b;
+    color: rgb(255, 255, 255);
 
     border-color: #666;
 }
