@@ -103,3 +103,51 @@ if (
     }
 
 }
+const colorCode =
+    document.getElementById("colorCode");
+
+const colorPicker =
+    document.getElementById("mainColor");
+    const colorPreview =
+    document.getElementById("colorPreview");
+
+/* テキストボックスクリック */
+
+colorCode.addEventListener("click", () => {
+
+    colorPicker.click();
+
+});
+colorPreview.addEventListener("click", () => {
+
+    colorPicker.click();
+
+});
+/* 色選択 */
+colorPicker.addEventListener("input", () => {
+
+    const color =
+        colorPicker.value.toUpperCase();
+
+    colorCode.value = color;
+
+    colorPreview.style.backgroundColor =
+        color;
+
+});
+
+/* 色を消す */
+const clearColor =
+    document.getElementById("clearColor");
+clearColor.addEventListener("click", () => {
+
+    colorCode.value = "";
+
+    colorCode.placeholder = "#FFFFFF";
+
+    colorPicker.value = "#ffffff";
+
+    colorPreview.style.backgroundColor =
+    "transparent";
+
+});
