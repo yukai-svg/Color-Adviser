@@ -256,6 +256,7 @@ nav {
     justify-content: center;
     align-items: center;
 }
+
 .loading-content,
 .palette-content,
 .coloring-content,
@@ -319,12 +320,15 @@ nav {
     cursor: pointer;
 }
 
-.result-images {
+.result-image {
+    width: 300px;
+    height: 180px;
+
+    overflow: hidden;
+
     display: flex;
     justify-content: center;
-    gap: 30px;
-
-    margin-top: 20px;
+    align-items: center;
 }
 .image-box {
     width: 180px;
@@ -560,3 +564,53 @@ nav {
 .dark-mode .footer-links a {
     color: #ccc;
 }
+.color-picker-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+#mainColor {
+       width: 42px;
+    height: 42px;
+
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+#colorCode {
+     width: 120px;
+
+    text-align: center;
+
+    cursor: pointer;
+}
+#clearColor {
+    width: 42px;
+    height: 42px;
+
+    border: none;
+    border-radius: 6px;
+background: #cecece;
+    cursor: pointer;
+}
+#colorPreview {
+    width: 24px;
+    height: 24px;
+
+    border: 1px solid #999;
+    border-radius: 4px;
+
+    background: transparent;
+
+    cursor: pointer;
+}
+#previewImage {
+    display: none;
+
+    max-width: 100%;
+    max-height: 100%;
+
+    object-fit: contain;
+}
+

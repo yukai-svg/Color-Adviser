@@ -107,9 +107,20 @@
 
         <p>画像をドロップ、または</p>
 
-        <button class="upload-btn">
-            画像ファイルをアップロード
-        </button>
+<input
+    type="file"
+    id="imageUpload"
+    accept="image/*"
+    hidden>
+
+<button
+    class="upload-btn"
+    id="uploadBtn">
+
+    画像ファイルをアップロード
+
+</button>
+
     </div>
 
     <!-- ロード中表示 -->
@@ -131,9 +142,12 @@
 <!-- 結果表示 -->
 <div class="palette-content">
 
-    <div class="result-image">
-        ここに画像
-    </div>
+<div class="result-image">
+
+    <img
+        id="previewImage">
+
+</div>
 
     <div class="palette-list">
 
@@ -211,8 +225,26 @@
 </div>
 </div>
         <div class="form-row">
-            <label>メインカラー：</label>
-            <input type="text" placeholder="#FFFFFF">
+<label>メインカラー：</label>
+<div class="color-picker-wrap">
+
+    <div id="colorPreview"></div>
+
+    <input
+        type="text"
+        id="colorCode"
+        placeholder="#FFFFFF"
+        readonly>
+
+    <input
+        type="color"
+        id="mainColor"
+        hidden>
+
+    </div>
+<button type="button" id="clearColor">
+    ×
+</button>
 
             <label>イメージ：</label>
             <input type="text" placeholder="〇〇のポスター">
@@ -238,8 +270,9 @@
     </div>
 </footer>
 
-<button class="top-btn">↑</button>
+<button class="top-btn"id="topBtn">↑</button>
 
 <script src="/js/fontsize.js"></script>
+<script src="/js/main.js"></script>
 </body>
 </html>
