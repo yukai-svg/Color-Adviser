@@ -12,6 +12,13 @@
     const paletteContentEl = document.querySelector(".palette-content");
     const coloringContentEl = document.querySelector(".coloring-content");
     const coloredResultContentEl = document.querySelector(".colored-result-content");
+const uploadContent =
+    document.getElementById("uploadContent");
+
+const decideBtn =
+    document.querySelector(".decide-btn");
+
+uploadBtn.addEventListener("click", () => {
 
     const colorPreviewEl = document.getElementById("colorPreview");
     const colorCodeEl = document.getElementById("colorCode");
@@ -50,6 +57,7 @@
             colorPreviewEl.style.backgroundColor = upperHex;
         }
     }
+});
 
     // 初期カラーセット
     updateSelectedColor("#FF130A");
@@ -159,6 +167,51 @@
                     previewImageEl.src = data.processed_image;
                     previewImageEl.style.display = "block";
                 }
+    document.querySelector(".upload-box")
+        .style.display = "none";
+
+    let imageArea =
+        document.querySelector(".selected-image-area");
+
+    if (!imageArea) {
+
+        imageArea =
+            document.createElement("div");
+
+        imageArea.className =
+            "selected-image-area";
+
+        document.querySelector(".tool-section")
+            .insertBefore(
+                imageArea,
+                document.querySelector(".form-row")
+            );
+
+    }
+
+   imageArea.innerHTML = `
+    <div class="image-menu">
+        ⋮
+    </div>
+
+    <img
+        src="${imageUrl}"
+        class="uploaded-image">
+`;
+
+
+});
+document.addEventListener("click", (e) => {
+
+    if (
+        e.target.classList.contains(
+            "image-menu"
+        )
+    ) {
+
+        imageUpload.click();
+
+    }
 
                 // 3つのパレットボタンに色を反映（0:補色, 1:類似色, 2:三色配色）
                 const paletteKeys = ["complementary", "analogous", "triadic"];

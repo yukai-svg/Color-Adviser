@@ -242,7 +242,48 @@ nav {
 
     font-size: 1.1rem;
 }
+.uploaded-image {
+    max-width: 500px;
+    max-height: 500px;
 
+    width: auto;
+    height: auto;
+
+    display: block;
+}
+.selected-image-area {
+
+    position: relative;
+
+    width: fit-content;
+
+    margin: 30px auto;
+
+}
+.image-menu {
+
+    position: absolute;
+
+    top: 10px;
+    right: 10px;
+
+    width: 32px;
+    height: 32px;
+
+    border-radius: 50%;
+
+    background: rgba(0,0,0,.6);
+
+    color: white;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    cursor: pointer;
+
+    font-size: 20px;
+}
 .upload-btn {
     width: 260px;
     height: 42px;
@@ -275,19 +316,7 @@ nav {
     padding: 30px 20px;
 }
 
-.result-image {
-    width: 300px;
-    height: 180px;
 
-    margin: 0 auto;
-
-    border: 1px solid #ccc;
-    background: white;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
 .palette-list {
     display: flex;
     justify-content: center;
@@ -320,16 +349,7 @@ nav {
     cursor: pointer;
 }
 
-.result-image {
-    width: 300px;
-    height: 180px;
 
-    overflow: hidden;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
 .image-box {
     width: 180px;
     height: 120px;
@@ -579,7 +599,7 @@ nav {
     cursor: pointer;
 }
 #colorCode {
-     width: 120px;
+     width: 160px;
 
     text-align: center;
 
