@@ -4,25 +4,17 @@ const uploadBtn =
 const imageUpload =
     document.getElementById("imageUpload");
 
+const uploadContent =
+    document.getElementById("uploadContent");
+
+const decideBtn =
+    document.querySelector(".decide-btn");
+
 uploadBtn.addEventListener("click", () => {
 
     imageUpload.click();
 
 });
-imageUpload.addEventListener("change", (e) => {
-
-    const file =
-        e.target.files[0];
-
-    if (!file) return;
-
-    console.log(file);
-
-});
-const previewImage =
-    document.getElementById(
-        "previewImage"
-    );
 
 imageUpload.addEventListener("change", (e) => {
 
@@ -34,32 +26,50 @@ imageUpload.addEventListener("change", (e) => {
     const imageUrl =
         URL.createObjectURL(file);
 
-    previewImage.src =
-        imageUrl;
-
-    previewImage.style.display =
-        "block";
-
-});
-const decideBtn =
-    document.querySelector(".decide-btn");
-
-decideBtn.addEventListener("click", () => {
-
-    document.querySelector(".upload-content")
+    document.querySelector(".upload-box")
         .style.display = "none";
 
-    document.querySelector(".loading-content")
-        .style.display = "block";
+    let imageArea =
+        document.querySelector(".selected-image-area");
 
-    setTimeout(() => {
+    if (!imageArea) {
 
-        document.querySelector(".loading-content")
-            .style.display = "none";
+        imageArea =
+            document.createElement("div");
 
-        document.querySelector(".palette-content")
-            .style.display = "block";
+        imageArea.className =
+            "selected-image-area";
 
-    }, 2000);
+        document.querySelector(".tool-section")
+            .insertBefore(
+                imageArea,
+                document.querySelector(".form-row")
+            );
+
+    }
+
+   imageArea.innerHTML = `
+    <div class="image-menu">
+        ⋮
+    </div>
+
+    <img
+        src="${imageUrl}"
+        class="uploaded-image">
+`;
+
+
+});
+document.addEventListener("click", (e) => {
+
+    if (
+        e.target.classList.contains(
+            "image-menu"
+        )
+    ) {
+
+        imageUpload.click();
+
+    }
 
 });
