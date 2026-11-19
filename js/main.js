@@ -181,7 +181,6 @@ if (decideBtnEl) {
             const data = await response.json();
             generatedPalettes = data.palettes;
 
-            // 透過画像だった場合、バックエンドで白背景合成された画像をプレビューに反映
             if (data.processed_image) {
                 beforeImageDataUrl = data.processed_image;
                 const uploadedImgEl = document.querySelector(".uploaded-image");
@@ -190,19 +189,24 @@ if (decideBtnEl) {
                 }
             }
 
-            // 3つのパレットボタンに色を反映（0:補色, 1:類似色, 2:三色配色）
+            // 最初の3つのパレットボタンに色を反映（0:補色, 1:類似色, 2:三色配色）
             const paletteKeys = ["complementary", "analogous", "triadic"];
             paletteBtnsEl.forEach((btn, idx) => {
-                const key = paletteKeys[idx];
-                const colors = generatedPalettes[key] || [];
-                const boxes = btn.querySelectorAll(".color-box");
-                boxes.forEach((box, cIdx) => {
-                    if (colors[cIdx]) {
-                        box.style.backgroundColor = colors[cIdx];
-                        box.title = colors[cIdx];
-                    }
-                });
-                btn.dataset.paletteKey = key;
+                if (idx < 3) {
+                    const key = paletteKeys[idx];
+                    const colors = generatedPalettes[key] || [];
+                    const boxes = btn.querySelectorAll(".color-box");
+                    boxes.forEach((box, cIdx) => {
+                        if (colors[cIdx]) {
+                            box.style.backgroundColor = colors[cIdx];
+                            box.title = colors[cIdx];
+                        }
+                    });
+                    btn.dataset.paletteKey = key;
+                } else {
+                    // 4つ目：AIおまかせモード
+                    btn.dataset.paletteKey = "ai_auto";
+                }
             });
 
             // デフォルトで1つ目（補色パレット）を選択状態にする
@@ -211,7 +215,6 @@ if (decideBtnEl) {
             showOnlySection(paletteContentEl);
         } catch (err) {
             alert(`エラー: ${err.message}`);
-            // 画像選択済みならupload-boxは隠したまま、未選択ならuploadContentを表示
             if (selectedFile && uploadBoxEl) {
                 uploadBoxEl.style.display = "none";
             } else {
@@ -222,10 +225,10 @@ if (decideBtnEl) {
 }
 
 // --------------------------------------------------
-// 4. パレットボタンの選択処理
+// 4. パレットボタンの選択処理（4つ目は「メインカラーのみ＋AIおまかせ」）
 // --------------------------------------------------
 function selectPaletteButton(index) {
-    const paletteKeys = ["complementary", "analogous", "triadic"];
+    const paletteKeys = ["complementary", "analogous", "triadic", "ai_auto"];
     paletteBtnsEl.forEach((btn, idx) => {
         if (idx === index) {
             btn.style.outline = "3px solid #4F46E5";
@@ -236,8 +239,12 @@ function selectPaletteButton(index) {
         }
     });
 
-    if (generatedPalettes) {
-        const key = paletteKeys[index];
+    const key = paletteKeys[index];
+    if (key === "ai_auto") {
+        // メインカラー1色だけを渡す（残りはバックエンドのAIがテーマから自動決定）
+        const currentMain = (colorCodeEl && colorCodeEl.value) ? colorCodeEl.value : "#FF130A";
+        selectedPaletteColors = [currentMain];
+    } else if (generatedPalettes) {
         selectedPaletteColors = generatedPalettes[key];
     }
 }
@@ -257,9 +264,16 @@ if (generateBtnEl) {
             alert("先に線画画像をアップロードしてください。");
             return;
         }
-        if (!selectedPaletteColors) {
-            alert("先にメインカラーを選んで「確定」ボタンを押し、パレットを選択してください。");
-            return;
+
+        // パレット未選択の場合でも、メインカラーが入っていれば「メインカラーのみ（AIおまかせ）」として自動進行
+        let colorsToSend = selectedPaletteColors;
+        if (!colorsToSend) {
+            const currentMain = (colorCodeEl && colorCodeEl.value) ? colorCodeEl.value : null;
+            if (!currentMain) {
+                alert("先にメインカラーを選んでください。");
+                return;
+            }
+            colorsToSend = [currentMain];
         }
 
         const themeText = themeInputEl ? themeInputEl.value.trim() : "";
@@ -269,7 +283,7 @@ if (generateBtnEl) {
         try {
             const formData = new FormData();
             formData.append("image", selectedFile);
-            formData.append("colors", JSON.stringify(selectedPaletteColors));
+            formData.append("colors", JSON.stringify(colorsToSend));
             formData.append("theme", themeText);
 
             const response = await fetch(`${API_BASE_URL}/api/colorize`, {
@@ -284,7 +298,6 @@ if (generateBtnEl) {
 
             const data = await response.json();
 
-            // 着色前・着色後画像の表示
             const beforeBox = coloredResultContentEl.querySelector(".before-image .image-box");
             const afterBox = coloredResultContentEl.querySelector(".after-image .image-box");
 
@@ -295,16 +308,18 @@ if (generateBtnEl) {
                 afterBox.innerHTML = `<img src="${data.colored_image}" alt="着色後" style="max-width: 100%; max-height: 100%; object-fit: contain;">`;
             }
 
-            // 使用パレット3色の表示
+            // 使用パレットの表示（1色のみの場合は1枠だけ色を表示し、残りは隠す）
             const usedBoxes = coloredResultContentEl.querySelectorAll(".selected-palette .color-box");
             usedBoxes.forEach((box, idx) => {
                 if (data.used_colors[idx]) {
+                    box.style.display = "inline-block";
                     box.style.backgroundColor = data.used_colors[idx];
                     box.title = data.used_colors[idx];
+                } else {
+                    box.style.display = "none";
                 }
             });
 
-            // AI解説文の表示
             const explanationEl = document.getElementById("aiExplanation");
             if (explanationEl) {
                 explanationEl.textContent = data.explanation;

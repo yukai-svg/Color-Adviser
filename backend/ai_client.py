@@ -31,27 +31,30 @@ EXPLANATION_PROMPT_TEMPLATE = """
 """
 
 DIFFUSERS_PROMPT_TEMPLATE = """
-あなたはプロのイラストレーター兼AIプロンプトエンジニアです。
-線画イラストを Stable Diffusion + ControlNet (Lineart) で高精度に彩色するための「英語プロンプト」と「ネガティブプロンプト」を、指定された3色とイメージから作成し、JSONのみで出力してください。
+あなたはプロのグラフィックデザイナー兼AIプロンプトエンジニアです。
+添付された「線画イラスト」の内容を視覚的に読み取り、Stable Diffusion + ControlNet (Lineart) でパーツごとに正確に彩色するための「英語プロンプト」と「ネガティブプロンプト」をJSONのみで出力してください。
 
-【使用カラーパレット（HEX）】
-ベース色（面積大）: {c0}
-メイン色（主役）: {c1}
-アクセント色: {c2}
+【使用カラー指定】
+メインカラー（画面の70%を占める主役色・背景や基調）: {c0}
+パレット補助色1: {c1}
+パレット補助色2: {c2}
 
 【ユーザーの希望イメージ】
 {theme}
 
+【作成ルール（超重要）】
+1. **画像のモチーフ認識と色割り当て**: 添付された線画に描かれている具体的な物体・文字・背景（例: 提灯、花火、かき氷、綿あめ、人物、集中線、看板文字など）を読み取り、「どの物体を何色で塗るか」を英語で具体的に指定すること（例: `orange paper lanterns, colorful fireworks, blue shaved ice, pink cotton candy`）。
+2. **70%メインカラー支配**: メインカラー({c0})を具体的な英語の色名に翻訳し、プロンプト前半で `(色名:1.35)` のように強調して画面全体の約7割の雰囲気を統一すること。
+3. **補助色の決定**:
+   - 補助色1・2にHEXコードがある場合はそれらを英語の色名に翻訳してモチーフの塗り分けに使うこと。
+   - 「AIおまかせ」の場合は、画像内のモチーフと希望イメージに最も自然な固有色（かき氷の氷やシロップ、提灯の灯り、食べ物の色など）をGeminiが判断して割り当てること。
+4. **文字数制限**: CLIPの77トークン制限で切り捨てられないよう、`positive_prompt` は**必ず55単語以内**に凝縮すること。
+
 【出力JSON仕様（厳守・他の文章やマークダウン記号は不要）】
 {{
-  "positive_prompt": "masterpiece, best quality, anime style illustration, clean coloring, ...",
-  "negative_prompt": "monochrome, greyscale, lineart only, uncolored, sketch, lowres, bad anatomy, blurry, text, watermark"
+  "positive_prompt": "masterpiece, best quality, digital poster art, (dominant crimson red night background:1.35), glowing orange lanterns, vibrant fireworks, cyan shaved ice, crisp graphic shading",
+  "negative_prompt": "monochrome, greyscale, lineart only, uncolored, lowres, blurry, muddy colors, watermark"
 }}
-
-【作成ルール】
-- HEXコード（#FF0000など）はStable Diffusionが理解できないため、必ず具体的な英語の色名・トーン表現（例: vibrant crimson red, soft pastel sky blue, warm cream yellow）に翻訳して組み込むこと。
-- ユーザーの希望イメージ（時間帯・空気感・質感・ライティング）を英語で具体的に描写すること。
-- 輪郭線を保ったまま美しく塗るため、"flat color, cel shading, soft lighting, clean lineart" などの画風タグを適切に含めること。
 """
 
 
@@ -93,14 +96,18 @@ def _hex_to_rgb(hex_color: str) -> tuple[int, int, int]:
     return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
 
 
-def _generate_diffusers_prompts_with_gemini(colors: list[str], theme: str) -> tuple[str, str]:
+def _generate_diffusers_prompts_with_gemini(image: Image.Image, colors: list[str], theme: str) -> tuple[str, str]:
     """
-    Geminiテキストモデル（無料枠）を使って、3色のHEXコードとイメージ文から
-    diffusers（ControlNet）用の英語プロンプトを生成する。
+    Geminiマルチモーダルモデル（無料枠）に「線画画像」と「カラー指定・テーマ」を渡し、
+    絵の中のモチーフを認識した上で diffusers 用の英語塗り分けプロンプトを生成する。
     """
-    padded = list(colors) if colors else ["#FF130A"]
-    while len(padded) < 3:
-        padded.append(padded[0])
+    c0 = colors[0] if colors and len(colors) >= 1 else "#FF130A"
+    if colors and len(colors) >= 3:
+        c1 = colors[1]
+        c2 = colors[2]
+    else:
+        c1 = "AIおまかせ（画像内のモチーフとイメージに合う色をAIが自動決定）"
+        c2 = "AIおまかせ（画像内のモチーフとイメージに合うアクセント色をAIが自動決定）"
 
     default_pos = (
         "masterpiece, best quality, high quality digital illustration, clean coloring, "
@@ -114,16 +121,20 @@ def _generate_diffusers_prompts_with_gemini(colors: list[str], theme: str) -> tu
     try:
         client = _get_client()
         prompt = DIFFUSERS_PROMPT_TEMPLATE.format(
-            c0=padded[0],
-            c1=padded[1],
-            c2=padded[2],
+            c0=c0,
+            c1=c1,
+            c2=c2,
             theme=theme.strip() if theme and theme.strip() else "バランスの良い鮮やかなイラスト",
         )
+
+        # 画像認識用にリサイズした線画をGeminiへ一緒に渡す（無料枠のテキスト+画像入力は利用可能）
+        preview_for_gemini = image.convert("RGB")
+        preview_for_gemini.thumbnail((512, 512), Image.Resampling.LANCZOS)
 
         def _request():
             response = client.models.generate_content(
                 model="gemini-3.5-flash-lite",
-                contents=prompt,
+                contents=[prompt, preview_for_gemini],
             )
             return response.text or ""
 
@@ -131,6 +142,15 @@ def _generate_diffusers_prompts_with_gemini(colors: list[str], theme: str) -> tu
         match = re.search(r"\{[\s\S]*\}", raw_text)
         if not match:
             return default_pos, default_neg
+
+        parsed = json.loads(match.group(0))
+        pos = str(parsed.get("positive_prompt", default_pos)).strip()
+        neg = str(parsed.get("negative_prompt", default_neg)).strip()
+        print(f"[INFO] Gemini画像認識プロンプト: {pos}")
+        return pos, neg
+    except Exception as e:
+        print(f"[WARN] Geminiプロンプト生成失敗のためデフォルトプロンプトを使用します: {e}")
+        return default_pos, default_neg
 
         parsed = json.loads(match.group(0))
         pos = str(parsed.get("positive_prompt", default_pos)).strip()
@@ -227,12 +247,12 @@ def _colorize_with_diffusers(image: Image.Image, colors: list[str], theme: str) 
     if pipe is None:
         raise AIClientError("diffusersパイプラインが利用できません。")
 
-    pos_prompt, neg_prompt = _generate_diffusers_prompts_with_gemini(colors, theme)
+    pos_prompt, neg_prompt = _generate_diffusers_prompts_with_gemini(image, colors, theme)
 
     orig_size = image.size
-    # Stable Diffusion 1.5 に適した8の倍数サイズへリサイズ（長辺512px）
+    # Stable Diffusion 1.5 に適した8の倍数サイズへリサイズ（長辺384px）
     w, h = orig_size
-    scale = 512.0 / max(w, h)
+    scale = 384.0 / max(w, h)
     gen_w = max(256, int((w * scale) // 8) * 8)
     gen_h = max(256, int((h * scale) // 8) * 8)
 
@@ -243,7 +263,7 @@ def _colorize_with_diffusers(image: Image.Image, colors: list[str], theme: str) 
     generator = torch.Generator(device="cpu").manual_seed(seed)
 
     # CPU実行時はステップ数を抑えて現実的な待ち時間にする（GPU時は25ステップ）
-    steps = 25 if torch.cuda.is_available() else 12
+    steps = 25 if torch.cuda.is_available() else 8
 
     output = pipe(
         prompt=pos_prompt,
@@ -345,7 +365,10 @@ def generate_color_explanation(colors: list[str], theme: str) -> str:
     テキストモデルを呼び出し、配色の解説文を生成する。
     """
     client = _get_client()
-    colors_str = "、".join(colors)
+    if len(colors) == 1:
+        colors_str = f"メインカラー {colors[0]}（残りのサブカラー・アクセントカラーはイメージに合わせてAIが自動選定）"
+    else:
+        colors_str = "、".join(colors)
     prompt = EXPLANATION_PROMPT_TEMPLATE.format(
         colors=colors_str,
         theme=theme or "指定なし（バランスの良い配色）"
