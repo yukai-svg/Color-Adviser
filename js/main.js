@@ -4,7 +4,6 @@ const API_BASE_URL = "http://127.0.0.1:8000";
 const uploadBoxEl = document.querySelector(".upload-box");
 const uploadBtnEl = document.getElementById("uploadBtn");
 const imageUploadEl = document.getElementById("imageUpload");
-const previewImageEl = document.getElementById("previewImage");
 
 const uploadContentEl = document.getElementById("uploadContent");
 const loadingContentEl = document.querySelector(".loading-content");
@@ -30,6 +29,10 @@ let selectedPaletteColors = null;
 
 // 表示エリアの切り替えヘルパー
 function showOnlySection(targetSection) {
+    // 親の .upload-box が画像選択時に非表示になっている場合は再表示する
+    if (uploadBoxEl && targetSection !== uploadContentEl) {
+        uploadBoxEl.style.display = "block";
+    }
     [uploadContentEl, loadingContentEl, paletteContentEl, coloringContentEl, coloredResultContentEl].forEach((el) => {
         if (el) el.style.display = "none";
     });
@@ -39,33 +42,41 @@ function showOnlySection(targetSection) {
 // 初期表示をアップロード画面に固定
 showOnlySection(uploadContentEl);
 
-// カラーピッカー操作
+// --------------------------------------------------
+// 1. カラーピッカー操作
+// --------------------------------------------------
 function updateSelectedColor(hex) {
     const upperHex = hex.toUpperCase();
     if (colorCodeEl) colorCodeEl.value = upperHex;
     if (colorPreviewEl) colorPreviewEl.style.backgroundColor = upperHex;
 }
 
-// 初期カラーセット
-updateSelectedColor("#FF130A");
+if (colorCodeEl) colorCodeEl.value = "";
+if (colorPreviewEl) colorPreviewEl.style.backgroundColor = "transparent";
+if (mainColorInputEl) mainColorInputEl.value = "#FFFFFF";
 
-if (colorPreviewEl && mainColorInputEl) {
-    colorPreviewEl.style.cursor = "pointer";
-    colorPreviewEl.addEventListener("click", () => mainColorInputEl.click());
-}
-if (colorCodeEl && mainColorInputEl) {
-    colorCodeEl.style.cursor = "pointer";
-    colorCodeEl.addEventListener("click", () => mainColorInputEl.click());
-}
+// プレビュー枠またはテキスト欄クリックでカラーピッカーを開く
+[colorPreviewEl, colorCodeEl].forEach((el) => {
+    if (el && mainColorInputEl) {
+        el.style.cursor = "pointer";
+        el.addEventListener("click", () => {
+            mainColorInputEl.click();
+        });
+    }
+});
+
 if (mainColorInputEl) {
     mainColorInputEl.addEventListener("input", (e) => {
         updateSelectedColor(e.target.value);
     });
 }
-if (clearColorBtnEl && mainColorInputEl) {
+
+if (clearColorBtnEl && mainColorInputEl && colorCodeEl && colorPreviewEl) {
     clearColorBtnEl.addEventListener("click", () => {
+        colorCodeEl.value = "";
+        colorCodeEl.placeholder = "#FFFFFF";
+        colorPreviewEl.style.backgroundColor = "transparent";
         mainColorInputEl.value = "#FFFFFF";
-        updateSelectedColor("#FFFFFF");
     });
 }
 
@@ -74,21 +85,40 @@ if (clearColorBtnEl && mainColorInputEl) {
 // --------------------------------------------------
 function handleFileSelected(file) {
     if (!file) return;
+
     selectedFile = file;
 
     const reader = new FileReader();
     reader.onload = (ev) => {
         beforeImageDataUrl = ev.target.result;
-        if (previewImageEl) {
-            previewImageEl.src = beforeImageDataUrl;
-            previewImageEl.style.display = "block";
+
+        if (uploadBoxEl) {
+            uploadBoxEl.style.display = "none";
         }
-        if (uploadBtnEl) {
-            uploadBtnEl.textContent = `選択済み: ${file.name}`;
+
+        let imageArea = document.querySelector(".selected-image-area");
+        if (!imageArea) {
+            imageArea = document.createElement("div");
+            imageArea.className = "selected-image-area";
+            document.querySelector(".tool-section").insertBefore(
+                imageArea,
+                document.querySelector(".form-row")
+            );
         }
+
+        imageArea.innerHTML = `
+            <div class="image-menu">⋮</div>
+            <img src="${beforeImageDataUrl}" class="uploaded-image">
+        `;
     };
     reader.readAsDataURL(file);
 }
+
+document.addEventListener("click", (e) => {
+    if (e.target.classList.contains("image-menu") && imageUploadEl) {
+        imageUploadEl.click();
+    }
+});
 
 if (uploadBtnEl && imageUploadEl) {
     uploadBtnEl.addEventListener("click", () => {
@@ -149,10 +179,12 @@ if (decideBtnEl) {
             generatedPalettes = data.palettes;
 
             // 透過画像だった場合、バックエンドで白背景合成された画像をプレビューに反映
-            if (data.processed_image && previewImageEl) {
+            if (data.processed_image) {
                 beforeImageDataUrl = data.processed_image;
-                previewImageEl.src = data.processed_image;
-                previewImageEl.style.display = "block";
+                const uploadedImgEl = document.querySelector(".uploaded-image");
+                if (uploadedImgEl) {
+                    uploadedImgEl.src = data.processed_image;
+                }
             }
 
             // 3つのパレットボタンに色を反映（0:補色, 1:類似色, 2:三色配色）
@@ -176,7 +208,12 @@ if (decideBtnEl) {
             showOnlySection(paletteContentEl);
         } catch (err) {
             alert(`エラー: ${err.message}`);
-            showOnlySection(uploadContentEl);
+            // 画像選択済みならupload-boxは隠したまま、未選択ならuploadContentを表示
+            if (selectedFile && uploadBoxEl) {
+                uploadBoxEl.style.display = "none";
+            } else {
+                showOnlySection(uploadContentEl);
+            }
         }
     });
 }
