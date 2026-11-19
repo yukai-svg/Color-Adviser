@@ -66,9 +66,8 @@ if (mainColorInputEl) mainColorInputEl.value = "#FFFFFF";
 });
 
 if (mainColorInputEl) {
-    mainColorInputEl.addEventListener("input", (e) => {
-        updateSelectedColor(e.target.value);
-    });
+    mainColorInputEl.value =
+        "#FFFFFF";
 }
 
 if (clearColorBtnEl && mainColorInputEl && colorCodeEl && colorPreviewEl) {
@@ -78,12 +77,14 @@ if (clearColorBtnEl && mainColorInputEl && colorCodeEl && colorPreviewEl) {
         colorPreviewEl.style.backgroundColor = "transparent";
         mainColorInputEl.value = "#FFFFFF";
     });
+
 }
 
 // --------------------------------------------------
 // 2. 画像アップロード（クリック＆ドラッグ＆ドロップ）
 // --------------------------------------------------
 function handleFileSelected(file) {
+
     if (!file) return;
 
     selectedFile = file;
