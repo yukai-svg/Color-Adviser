@@ -65,9 +65,11 @@ if (mainColorInputEl) mainColorInputEl.value = "#FFFFFF";
     }
 });
 
+// カラーピッカーで色を選んだときにプレビューとコード欄へ反映する
 if (mainColorInputEl) {
-    mainColorInputEl.value =
-        "#FFFFFF";
+    mainColorInputEl.addEventListener("input", (e) => {
+        updateSelectedColor(e.target.value);
+    });
 }
 
 if (clearColorBtnEl && mainColorInputEl && colorCodeEl && colorPreviewEl) {

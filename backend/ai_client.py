@@ -8,11 +8,14 @@ import time
 from collections import deque
 from dotenv import load_dotenv
 from google import genai
-from google.genai import types
 from google.genai.errors import ClientError, ServerError
-from PIL import Image, ImageFilter, ImageOps
+from PIL import Image, ImageChops, ImageFilter, ImageOps
 
 load_dotenv()
+
+# diffusers / torch の遅延ロード用キャッシュ
+_DIFFUSERS_PIPE = None
+_DIFFUSERS_AVAILABLE = None
 
 EXPLANATION_PROMPT_TEMPLATE = """
 あなたはプロの色彩検定講師・カラーコーディネーターです。
@@ -27,55 +30,33 @@ EXPLANATION_PROMPT_TEMPLATE = """
 ※出力は3〜4文程度の自然な解説文のみとし、前置きや箇条書きの記号は使わないでください。
 """
 
-THEME_ANALYSIS_PROMPT_TEMPLATE = """
-あなたはプロのイラストレーター兼カラーディレクターです。
-線画イラストを「指定された3色のカラーパレット」で自動彩色するための塗り分けパラメータを、ユーザーの希望イメージから判断してJSONのみで出力してください。
+DIFFUSERS_PROMPT_TEMPLATE = """
+あなたはプロのイラストレーター兼AIプロンプトエンジニアです。
+線画イラストを Stable Diffusion + ControlNet (Lineart) で高精度に彩色するための「英語プロンプト」と「ネガティブプロンプト」を、指定された3色とイメージから作成し、JSONのみで出力してください。
 
-【使用カラーパレット（インデックス0, 1, 2）】
-0: {c0}
-1: {c1}
-2: {c2}
+【使用カラーパレット（HEX）】
+ベース色（面積大）: {c0}
+メイン色（主役）: {c1}
+アクセント色: {c2}
 
 【ユーザーの希望イメージ】
 {theme}
 
 【出力JSON仕様（厳守・他の文章やマークダウン記号は不要）】
 {{
-  "brightness": 1.0,
-  "saturation": 1.0,
-  "color_order": [1, 0, 2],
-  "fill_background": false,
-  "bg_color_index": 1,
-  "bg_opacity": 0.25
+  "positive_prompt": "masterpiece, best quality, anime style illustration, clean coloring, ...",
+  "negative_prompt": "monochrome, greyscale, lineart only, uncolored, sketch, lowres, bad anatomy, blurry, text, watermark"
 }}
 
-【各項目の判断基準】
-- brightness (0.55 〜 1.35): 「夜・暗い・重厚・シック・大人」なら 0.65〜0.85、「パステル・淡い・優しい・ふんわり・明るい」なら 1.15〜1.30、標準は 1.0。
-- saturation (0.45 〜 1.30): 「淡い・ナチュラル・くすみ・レトロ・上品」なら 0.55〜0.80、「ポップ・元気・ネオン・鮮やか・派手」なら 1.10〜1.25、標準は 1.0。
-- color_order: [ベース/大きい面の色番号, メイン/文字の色番号, アクセントの色番号] を 0, 1, 2 の並び替えで指定。
-- fill_background (true または false): 「夜空・海・宇宙・夕焼け・背景まで世界観があるポスター」なら true、「白背景のロゴ・アイコン・切り抜きイラスト・POP」なら false。
-- bg_color_index (0, 1, 2): fill_background が true のときに背景に使う色番号。
-- bg_opacity (0.12 〜 0.85): 背景の濃さ。「夜・宇宙・濃い背景」なら 0.65〜0.85、「淡い空・ふんわり背景」なら 0.15〜0.35。
-"""
-
-COLORIZE_PROMPT_TEMPLATE = """
-添付された線画イラストに対して、以下のカラーパレットとイメージのみを使用して綺麗に彩色してください。
-
-【指定カラーパレット（HEXコード）】
-{colors}
-
-【イメージ・雰囲気】
-{theme}
-
-【厳守ルール】
-- 元の線画の輪郭線・構図・キャラクターやモチーフの形は一切変更しないでください。
-- 指定されたカラーパレットの色とその明暗・濃淡を中心に使って塗り分けてください。
-- 文字やロゴ、余計な背景オブジェクトは描き足さないでください。
+【作成ルール】
+- HEXコード（#FF0000など）はStable Diffusionが理解できないため、必ず具体的な英語の色名・トーン表現（例: vibrant crimson red, soft pastel sky blue, warm cream yellow）に翻訳して組み込むこと。
+- ユーザーの希望イメージ（時間帯・空気感・質感・ライティング）を英語で具体的に描写すること。
+- 輪郭線を保ったまま美しく塗るため、"flat color, cel shading, soft lighting, clean lineart" などの画風タグを適切に含めること。
 """
 
 
 class AIClientError(Exception):
-    """AI通信・リトライ失敗時の例外"""
+    """AI通信・処理失敗時の例外"""
     pass
 
 
@@ -112,115 +93,185 @@ def _hex_to_rgb(hex_color: str) -> tuple[int, int, int]:
     return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
 
 
-def _apply_hsv_adjust(rgb: tuple[int, int, int], brightness: float, saturation: float) -> tuple[int, int, int]:
-    """HSV空間で明度(V)と彩度(S)を自然に調整する"""
-    r, g, b = [x / 255.0 for x in rgb]
-    h, s, v = colorsys.rgb_to_hsv(r, g, b)
-
-    s = max(0.0, min(1.0, s * saturation))
-    # brightness > 1.0 のときは白方向へ持ち上げてパステル調も表現できるようにする
-    if brightness > 1.0:
-        lift = (brightness - 1.0) * 0.7
-        v = min(1.0, v + (1.0 - v) * lift)
-        s = max(0.0, s * (1.0 - lift * 0.6))
-    else:
-        v = max(0.05, min(1.0, v * brightness))
-
-    nr, ng, nb = colorsys.hsv_to_rgb(h, s, v)
-    return (int(nr * 255), int(ng * 255), int(nb * 255))
-
-
-def _analyze_theme_with_gemini(colors: list[str], theme: str) -> dict:
+def _generate_diffusers_prompts_with_gemini(colors: list[str], theme: str) -> tuple[str, str]:
     """
-    Geminiテキストモデル（無料枠）を使って、任意の自由イメージ文から
-    塗り分け用パラメータ(JSON)を生成する。
+    Geminiテキストモデル（無料枠）を使って、3色のHEXコードとイメージ文から
+    diffusers（ControlNet）用の英語プロンプトを生成する。
     """
-    default_params = {
-        "brightness": 1.0,
-        "saturation": 1.0,
-        "color_order": [1, 0, 2],
-        "fill_background": False,
-        "bg_color_index": 1,
-        "bg_opacity": 0.25,
-    }
-
-    if not theme or not theme.strip():
-        return default_params
-
     padded = list(colors) if colors else ["#FF130A"]
     while len(padded) < 3:
         padded.append(padded[0])
 
-    client = _get_client()
-    prompt = THEME_ANALYSIS_PROMPT_TEMPLATE.format(
-        c0=padded[0],
-        c1=padded[1],
-        c2=padded[2],
-        theme=theme.strip(),
+    default_pos = (
+        "masterpiece, best quality, high quality digital illustration, clean coloring, "
+        "soft shading, vibrant harmonious colors, detailed lighting"
+    )
+    default_neg = (
+        "monochrome, greyscale, lineart only, uncolored, sketch, lowres, "
+        "blurry, muddy colors, text, watermark, signature"
     )
 
-    def _request():
-        response = client.models.generate_content(
-            model="gemini-3.5-flash-lite",
-            contents=prompt,
-        )
-        return response.text or ""
-
     try:
+        client = _get_client()
+        prompt = DIFFUSERS_PROMPT_TEMPLATE.format(
+            c0=padded[0],
+            c1=padded[1],
+            c2=padded[2],
+            theme=theme.strip() if theme and theme.strip() else "バランスの良い鮮やかなイラスト",
+        )
+
+        def _request():
+            response = client.models.generate_content(
+                model="gemini-3.5-flash-lite",
+                contents=prompt,
+            )
+            return response.text or ""
+
         raw_text = _call_with_retry(_request)
         match = re.search(r"\{[\s\S]*\}", raw_text)
         if not match:
-            return default_params
+            return default_pos, default_neg
+
         parsed = json.loads(match.group(0))
-
-        # 安全な範囲にクランプして返却
-        brightness = max(0.55, min(1.35, float(parsed.get("brightness", 1.0))))
-        saturation = max(0.45, min(1.30, float(parsed.get("saturation", 1.0))))
-        order = parsed.get("color_order", [1, 0, 2])
-        if not isinstance(order, list) or len(order) < 3 or any(i not in (0, 1, 2) for i in order[:3]):
-            order = [1, 0, 2]
-        fill_bg = bool(parsed.get("fill_background", False))
-        bg_idx = int(parsed.get("bg_color_index", 1))
-        if bg_idx not in (0, 1, 2):
-            bg_idx = 1
-        bg_opacity = max(0.12, min(0.85, float(parsed.get("bg_opacity", 0.25))))
-
-        result = {
-            "brightness": brightness,
-            "saturation": saturation,
-            "color_order": order[:3],
-            "fill_background": fill_bg,
-            "bg_color_index": bg_idx,
-            "bg_opacity": bg_opacity,
-        }
-        print(f"[INFO] Geminiイメージ解析結果 ('{theme.strip()}'): {result}")
-        return result
+        pos = str(parsed.get("positive_prompt", default_pos)).strip()
+        neg = str(parsed.get("negative_prompt", default_neg)).strip()
+        print(f"[INFO] Gemini生成プロンプト: {pos}")
+        return pos, neg
     except Exception as e:
-        print(f"[WARN] Geminiイメージ解析のフォールバックを使用します: {e}")
-        return default_params
+        print(f"[WARN] Geminiプロンプト生成失敗のためデフォルトプロンプトを使用します: {e}")
+        return default_pos, default_neg
+
+
+def _get_diffusers_pipeline():
+    """
+    ControlNet (Lineart) + Stable Diffusion パイプラインをロードしてキャッシュする。
+    初回実行時のみHugging Faceからモデルをダウンロードする。
+    """
+    global _DIFFUSERS_PIPE, _DIFFUSERS_AVAILABLE
+
+    if _DIFFUSERS_AVAILABLE is False:
+        return None
+    if _DIFFUSERS_PIPE is not None:
+        return _DIFFUSERS_PIPE
+
+    try:
+        import torch
+        from diffusers import (
+            ControlNetModel,
+            StableDiffusionControlNetPipeline,
+            UniPCMultistepScheduler,
+        )
+
+        device = "cuda" if torch.cuda.is_available() else "cpu"
+        dtype = torch.float16 if device == "cuda" else torch.float32
+
+        print(f"[INFO] diffusers パイプラインを初期化中... (device={device}, dtype={dtype})")
+
+        controlnet_id = os.getenv("CONTROLNET_MODEL_ID", "lllyasviel/control_v11p_sd15_lineart")
+        base_model_id = os.getenv("SD_BASE_MODEL_ID", "runwayml/stable-diffusion-v1-5")
+
+        controlnet = ControlNetModel.from_pretrained(controlnet_id, torch_dtype=dtype)
+        pipe = StableDiffusionControlNetPipeline.from_pretrained(
+            base_model_id,
+            controlnet=controlnet,
+            torch_dtype=dtype,
+            safety_checker=None,
+        )
+        pipe.scheduler = UniPCMultistepScheduler.from_config(pipe.scheduler.config)
+
+        if device == "cuda":
+            pipe = pipe.to("cuda")
+        else:
+            # CPU環境でもメモリ不足で落ちにくくする最適化
+            pipe.enable_attention_slicing()
+
+        _DIFFUSERS_PIPE = pipe
+        _DIFFUSERS_AVAILABLE = True
+        print("[INFO] diffusers パイプラインのロード完了")
+        return _DIFFUSERS_PIPE
+
+    except Exception as e:
+        print(f"[WARN] diffusers の初期化に失敗しました（Pillowフォールバックへ切り替えます）: {e}")
+        _DIFFUSERS_AVAILABLE = False
+        return None
+
+
+def _prepare_controlnet_lineart(image: Image.Image, target_size: tuple[int, int]) -> Image.Image:
+    """
+    白背景・黒線の線画を ControlNet Lineart が認識しやすい「黒背景・白線」に変換する。
+    """
+    gray = ImageOps.grayscale(image.convert("RGB")).resize(target_size, Image.Resampling.LANCZOS)
+    inverted = ImageOps.invert(gray)
+    # 薄いノイズを飛ばして主線をはっきりさせる
+    enhanced = inverted.point(lambda p: 255 if p > 60 else int(p * 0.5))
+    return enhanced.convert("RGB")
+
+
+def _tint_with_palette_guide(colored_img: Image.Image, orig_lineart: Image.Image, colors: list[str]) -> Image.Image:
+    """
+    diffusers生成画像の豊かな陰影・グラデーションを活かしつつ、
+    元の線画を乗算合成して輪郭線をシャープに仕上げる。
+    """
+    w, h = colored_img.size
+    line_rgb = orig_lineart.convert("RGB").resize((w, h), Image.Resampling.LANCZOS)
+    # 元の線画の白背景部分を完全な白(255)に近づけ、黒線だけを残す
+    line_clean = line_rgb.point(lambda p: 255 if p > 210 else p)
+    return ImageChops.multiply(colored_img, line_clean)
+
+
+def _colorize_with_diffusers(image: Image.Image, colors: list[str], theme: str) -> Image.Image:
+    """
+    Geminiで英語プロンプト生成 → diffusers (ControlNet Lineart) で彩色 → Pillowで主線乗算仕上げ
+    """
+    pipe = _get_diffusers_pipeline()
+    if pipe is None:
+        raise AIClientError("diffusersパイプラインが利用できません。")
+
+    pos_prompt, neg_prompt = _generate_diffusers_prompts_with_gemini(colors, theme)
+
+    orig_size = image.size
+    # Stable Diffusion 1.5 に適した8の倍数サイズへリサイズ（長辺512px）
+    w, h = orig_size
+    scale = 512.0 / max(w, h)
+    gen_w = max(256, int((w * scale) // 8) * 8)
+    gen_h = max(256, int((h * scale) // 8) * 8)
+
+    control_image = _prepare_controlnet_lineart(image, (gen_w, gen_h))
+
+    import torch
+    seed = int(hashlib.md5(f"{colors}-{theme}".encode("utf-8")).hexdigest()[:8], 16)
+    generator = torch.Generator(device="cpu").manual_seed(seed)
+
+    # CPU実行時はステップ数を抑えて現実的な待ち時間にする（GPU時は25ステップ）
+    steps = 25 if torch.cuda.is_available() else 12
+
+    output = pipe(
+        prompt=pos_prompt,
+        negative_prompt=neg_prompt,
+        image=control_image,
+        num_inference_steps=steps,
+        guidance_scale=7.5,
+        controlnet_conditioning_scale=1.0,
+        generator=generator,
+    ).images[0]
+
+    # 元の線画を乗算合成して輪郭線をくっきりさせる
+    finished = _tint_with_palette_guide(output, image, colors)
+
+    if finished.size != orig_size:
+        finished = finished.resize(orig_size, Image.Resampling.LANCZOS)
+
+    return finished
 
 
 def _fallback_colorize_with_pillow(image: Image.Image, colors: list[str], theme: str = "") -> Image.Image:
     """
-    Geminiによる自由イメージ解析パラメータ + Pillowによる高精度フラット塗り分け処理:
-    1. Geminiでイメージ文から明度・彩度・主役色順・背景塗りの有無を取得
-    2. 線の隙間閉じ処理でパーツ（閉領域）を抽出
-    3. AIの判断に基づき、背景処理と各パーツのフラット彩色を実行
+    diffusersが未インストール・メモリ不足等で動かない環境向けのバックアップ彩色処理
     """
-    params = _analyze_theme_with_gemini(colors, theme)
-
     base_rgb = [_hex_to_rgb(c) for c in colors] if colors else [(255, 19, 10)]
     while len(base_rgb) < 3:
         base_rgb.append(base_rgb[0])
 
-    # Geminiが判断した明度・彩度パラメータで3色のトーンを調整
-    adjusted_rgb = [
-        _apply_hsv_adjust(c, params["brightness"], params["saturation"])
-        for c in base_rgb
-    ]
-    ordered_colors = [adjusted_rgb[i] for i in params["color_order"]]
-
-    # 同じ条件なら再現性を保ちつつ、イメージ文ごとのパーツ割り当てバリエーションを生成
     seed = int(hashlib.md5(theme.strip().encode("utf-8")).hexdigest(), 16) if theme.strip() else 0
 
     orig_size = image.size
@@ -259,31 +310,14 @@ def _fallback_colorize_with_pillow(image: Image.Image, colors: list[str], theme:
 
                 regions.append((touches_border, region_pixels))
 
-    # 背景色の決定（Geminiが fill_background=True と判断した場合は指定色のティントで塗る）
-    if params["fill_background"]:
-        bg_base = adjusted_rgb[params["bg_color_index"]]
-        op = params["bg_opacity"]
-        bg_color = (
-            int(255 * (1 - op) + bg_base[0] * op),
-            int(255 * (1 - op) + bg_base[1] * op),
-            int(255 * (1 - op) + bg_base[2] * op),
-        )
-    else:
-        bg_color = (255, 255, 255)
-
-    fill_layer = Image.new("RGB", (w, h), bg_color)
+    fill_layer = Image.new("RGB", (w, h), (255, 255, 255))
     fill_px = fill_layer.load()
 
     inner_regions = [pxs for is_bg, pxs in regions if not is_bg and len(pxs) >= 6]
     inner_regions.sort(key=len, reverse=True)
 
     for idx, pxs in enumerate(inner_regions):
-        if idx == 0:
-            target_color = ordered_colors[0]
-        else:
-            color_idx = (idx + (seed % 3)) % 3
-            target_color = ordered_colors[color_idx]
-
+        target_color = base_rgb[0] if idx == 0 else base_rgb[(idx + (seed % 3)) % 3]
         for px, py in pxs:
             fill_px[px, py] = target_color
 
@@ -297,11 +331,7 @@ def _fallback_colorize_with_pillow(image: Image.Image, colors: list[str], theme:
         for x in range(w):
             lum = g_px[x, y] / 255.0
             fr, fg, fb = b_px[x, y]
-            res_px[x, y] = (
-                int(fr * lum),
-                int(fg * lum),
-                int(fb * lum),
-            )
+            res_px[x, y] = (int(fr * lum), int(fg * lum), int(fb * lum))
 
     if result.size != orig_size:
         result = result.resize(orig_size, Image.Resampling.LANCZOS)
@@ -339,33 +369,12 @@ def generate_color_explanation(colors: list[str], theme: str) -> str:
 def colorize_line_art(image: Image.Image, colors: list[str], theme: str) -> Image.Image:
     """
     【2回目の通信：seq 彩色通信】
-    Gemini画像生成モデルを呼び出す。無料枠制限(429)の場合は
-    Gemini自由イメージ解析 + Pillowフラット自動彩色を実行する。
+    1. Geminiで3色パレット＋イメージを英語プロンプト化
+    2. diffusers (ControlNet Lineart) で陰影・質感つきのAI彩色を実行
+    3. diffusers未導入・エラー時のみPillowフォールバックを使用
     """
-    client = _get_client()
-    colors_str = "、".join(colors)
-    prompt = COLORIZE_PROMPT_TEMPLATE.format(
-        colors=colors_str,
-        theme=theme or "指定なし（自然な仕上がり）"
-    )
-
-    def _request():
-        response = client.models.generate_content(
-            model="gemini-2.5-flash-image",
-            contents=[prompt, image],
-            config=types.GenerateContentConfig(
-                response_modalities=["IMAGE"],
-            ),
-        )
-        for part in response.candidates[0].content.parts:
-            if part.inline_data is not None:
-                return Image.open(io.BytesIO(part.inline_data.data)).convert("RGB")
-        raise AIClientError("AIから彩色画像が返却されませんでした。")
-
     try:
-        return _call_with_retry(_request)
-    except ClientError as e:
-        if "429" in str(e) or "RESOURCE_EXHAUSTED" in str(e):
-            print("[INFO] Gemini画像生成の無料枠制限(429)を検知したため、Geminiイメージ解析＋自動彩色を実行します。")
-            return _fallback_colorize_with_pillow(image, colors, theme)
-        raise AIClientError(f"画像生成APIエラー: {str(e)}") from e
+        return _colorize_with_diffusers(image, colors, theme)
+    except Exception as e:
+        print(f"[WARN] diffusers彩色の代替としてPillow彩色を実行します: {e}")
+        return _fallback_colorize_with_pillow(image, colors, theme)
