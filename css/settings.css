@@ -316,7 +316,21 @@ hr{
     background:white;
     border-radius:50%;
 }
-
+.switch input:checked + .slider {
+    background: #3171e7;
+}
+.switch input:not(:checked) + .slider {
+    background: #b4b4b4;
+}
+.switch input:checked + .slider::before {
+    transform: translateX(25px);
+}
+.slider {
+    transition: .3s;
+}
+.slider::before {
+    transition: .3s;
+}
 /* Buttons */
 
 .button-area{

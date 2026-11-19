@@ -133,7 +133,8 @@ lightBtn.addEventListener("click", () => {
 
     localStorage.setItem(
         "theme",
-        "light"
+        "light",
+         "historySave"
     );
 
 });
@@ -176,3 +177,44 @@ if (savedTheme === "dark") {
     darkBtn.classList.remove("active");
 
 }
+const resetBtn =
+    document.querySelector(".reset-btn");
+
+resetBtn.addEventListener("click", () => {
+
+    if (
+        !confirm(
+            "設定を初期状態に戻しますか？"
+        )
+    ) return;
+
+    localStorage.clear();
+
+    location.reload();
+
+});
+const historySave =
+    document.getElementById(
+        "historySave"
+    );
+    const savedHistory =
+    localStorage.getItem(
+        "historySave"
+    );
+    if (savedHistory !== null) {
+
+    historySave.checked =
+        savedHistory === "true";
+
+}
+historySave.addEventListener(
+    "change",
+    () => {
+
+        localStorage.setItem(
+            "historySave",
+            historySave.checked
+        );
+
+    }
+);
