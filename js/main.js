@@ -47,49 +47,110 @@ function updateSelectedColor(hex) {
 }
 
 // 初期カラーセット
-updateSelectedColor("#FF130A");
+if (colorCodeEl) {
+    colorCodeEl.value = "";
+}
 
-if (colorPreviewEl && mainColorInputEl) {
-    colorPreviewEl.style.cursor = "pointer";
-    colorPreviewEl.addEventListener("click", () => mainColorInputEl.click());
+if (colorPreviewEl) {
+    colorPreviewEl.style.backgroundColor =
+        "transparent";
 }
-if (colorCodeEl && mainColorInputEl) {
-    colorCodeEl.style.cursor = "pointer";
-    colorCodeEl.addEventListener("click", () => mainColorInputEl.click());
-}
+
 if (mainColorInputEl) {
-    mainColorInputEl.addEventListener("input", (e) => {
-        updateSelectedColor(e.target.value);
-    });
+    mainColorInputEl.value =
+        "#FFFFFF";
 }
-if (clearColorBtnEl && mainColorInputEl) {
+
+if (
+    clearColorBtnEl &&
+    mainColorInputEl &&
+    colorCodeEl &&
+    colorPreviewEl
+) {
+
     clearColorBtnEl.addEventListener("click", () => {
-        mainColorInputEl.value = "#FFFFFF";
-        updateSelectedColor("#FFFFFF");
+
+        colorCodeEl.value = "";
+
+        colorCodeEl.placeholder =
+            "#FFFFFF";
+
+        colorPreviewEl.style.backgroundColor =
+            "transparent";
+
+        mainColorInputEl.value =
+            "#FFFFFF";
+
     });
+
 }
 
 // --------------------------------------------------
 // 2. 画像アップロード（クリック＆ドラッグ＆ドロップ）
 // --------------------------------------------------
 function handleFileSelected(file) {
+
     if (!file) return;
+
     selectedFile = file;
 
     const reader = new FileReader();
-    reader.onload = (ev) => {
-        beforeImageDataUrl = ev.target.result;
-        if (previewImageEl) {
-            previewImageEl.src = beforeImageDataUrl;
-            previewImageEl.style.display = "block";
-        }
-        if (uploadBtnEl) {
-            uploadBtnEl.textContent = `選択済み: ${file.name}`;
-        }
-    };
-    reader.readAsDataURL(file);
-}
 
+    reader.onload = (ev) => {
+
+        beforeImageDataUrl = ev.target.result;
+
+        document.querySelector(".upload-box")
+            .style.display = "none";
+
+        let imageArea =
+            document.querySelector(".selected-image-area");
+
+        if (!imageArea) {
+
+            imageArea =
+                document.createElement("div");
+
+            imageArea.className =
+                "selected-image-area";
+
+            document.querySelector(".tool-section")
+                .insertBefore(
+                    imageArea,
+                    document.querySelector(".form-row")
+                );
+
+        }
+
+        imageArea.innerHTML = `
+            <div class="image-menu">⋮</div>
+
+            <img
+                src="${beforeImageDataUrl}"
+                class="uploaded-image">
+        `;
+
+    };
+
+    reader.readAsDataURL(file);
+
+}
+document.addEventListener(
+    "click",
+    (e) => {
+
+        if (
+            e.target.classList.contains(
+                "image-menu"
+            )
+        ) {
+
+            imageUploadEl.click();
+
+        }
+
+    }
+);
 if (uploadBtnEl && imageUploadEl) {
     uploadBtnEl.addEventListener("click", () => {
         imageUploadEl.click();
