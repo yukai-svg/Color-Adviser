@@ -96,6 +96,7 @@ nav{
 }
 .modal-content {
     width: 450px;
+    max-width: 90%;
 
     background: white;
 
@@ -285,10 +286,11 @@ hr{
 
 /* Switch */
 
-.switch{
-    position:relative;
-    width:55px;
-    height:30px;
+.switch {
+    position: relative;
+    width: 55px;
+    height: 30px;
+    cursor: pointer;
 }
 
 .switch input{
@@ -474,4 +476,25 @@ hr{
 }
 .dark-mode .setting-row label {
     color: white;
+}
+.dark-mode .policy-text {
+    color: #e0e0e0;
+}
+.policy-text {
+
+    margin-top: 15px;
+
+    text-align: left;
+
+    line-height: 1.8;
+
+    max-height: 300px;
+
+    overflow-y: auto;
+
+}
+.policy-text p {
+
+    margin-bottom: 12px;
+
 }
