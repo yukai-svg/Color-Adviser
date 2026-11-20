@@ -11,8 +11,9 @@ document
 
     });
 
+
 document
-    .querySelector(".cancel-btn")
+    .getElementById("passwordCancel")
     .addEventListener("click", () => {
 
         modal.style.display = "none";
@@ -149,11 +150,10 @@ darkBtn.addEventListener("click", () => {
     darkBtn.classList.add("active");
     lightBtn.classList.remove("active");
 
-    localStorage.setItem(
-        "theme",
-        "dark",
-         "historySave"
-    );
+   localStorage.setItem(
+    "theme",
+    "dark"
+);
 
 });
 
@@ -180,35 +180,43 @@ if (savedTheme === "dark") {
 
 }
 const resetBtn =
-    document.querySelector(".reset-btn");
+    document.querySelector(
+        ".reset-btn"
+    );
 
-resetBtn.addEventListener("click", () => {
+resetBtn.addEventListener(
+    "click",
+    () => {
 
-    if (
-        !confirm(
-            "設定を初期状態に戻しますか？"
-        )
-    ) return;
+        if (
+            !confirm(
+                "設定を初期状態に戻しますか？"
+            )
+        ) return;
 
-    localStorage.clear();
+        localStorage.clear();
 
-    location.reload();
+        location.reload();
 
-});
+    }
+);
 const historySave =
     document.getElementById(
         "historySave"
     );
-    const savedHistory =
+
+const savedHistory =
     localStorage.getItem(
         "historySave"
     );
-    if (savedHistory !== null) {
+
+if (savedHistory !== null) {
 
     historySave.checked =
         savedHistory === "true";
 
 }
+
 historySave.addEventListener(
     "change",
     () => {
@@ -217,6 +225,75 @@ historySave.addEventListener(
             "historySave",
             historySave.checked
         );
+
+    }
+);
+const privacyModal =
+    document.getElementById(
+        "privacyModal"
+    );
+
+const termsModal =
+    document.getElementById(
+        "termsModal"
+    );
+document
+    .getElementById("privacyLink")
+    .addEventListener("click", (e) => {
+
+        e.preventDefault();
+
+        privacyModal.style.display =
+            "flex";
+
+    });
+   document
+    .getElementById("termsLink")
+    .addEventListener("click", (e) => {
+
+        e.preventDefault();
+
+        termsModal.style.display =
+            "flex";
+
+    }); 
+    document
+    .getElementById("closePrivacy")
+    .addEventListener("click", () => {
+
+        privacyModal.style.display =
+            "none";
+
+    });
+    document
+    .getElementById("closeTerms")
+    .addEventListener("click", () => {
+
+        termsModal.style.display =
+            "none";
+
+    });
+    window.addEventListener(
+    "click",
+    (e) => {
+
+        if (
+            e.target === privacyModal
+        ) {
+
+            privacyModal.style.display =
+                "none";
+
+        }
+
+        if (
+            e.target === termsModal
+        ) {
+
+            termsModal.style.display =
+                "none";
+
+        }
 
     }
 );

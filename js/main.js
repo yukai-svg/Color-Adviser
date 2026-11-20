@@ -1,4 +1,5 @@
-const API_BASE_URL = "http://127.0.0.1:8000";
+const API_BASE_URL =
+    "https://glorious-space-memory-wv7qwqxvvx77hq66-8000.app.github.dev";
 
 // 画面要素の取得
 const uploadBoxEl = document.querySelector(".upload-box");
