@@ -11,6 +11,7 @@ from google import genai
 from google.genai.errors import ClientError, ServerError
 from PIL import Image, ImageChops, ImageFilter, ImageOps
 
+
 load_dotenv()
 
 # diffusers / torch の遅延ロード用キャッシュ
@@ -67,8 +68,10 @@ def _get_client() -> genai.Client:
     api_key = os.getenv("GEMINI_API_KEY")
     if not api_key:
         raise AIClientError("GEMINI_API_KEY が .env に設定されていません。")
-    return genai.Client(api_key=api_key)
-
+    return genai.Client(
+        api_key=api_key,
+        http_options=types.HttpOptions(timeout=30000),
+    )
 
 def _call_with_retry(func, max_retries: int = 2, wait_sec: float = 2.0):
     """503 UNAVAILABLE（サーバー混雑）時に自動リトライするラッパー"""

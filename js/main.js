@@ -27,6 +27,25 @@ let beforeImageDataUrl = null;
 let generatedPalettes = null;
 let selectedPaletteColors = null;
 
+
+
+// タイムアウト付きfetchヘルパー（js/main.js の上部に追加）
+async function fetchWithTimeout(url, options = {}, timeoutMs = 30000) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+        return await fetch(url, { ...options, signal: controller.signal });
+    } catch (err) {
+        if (err.name === "AbortError") {
+            throw new Error("サーバーの応答がタイムアウトしました。時間をおいて再度お試しください。");
+        }
+        throw err;
+    } finally {
+        clearTimeout(timer);
+    }
+}
+
+
 // 表示エリアの切り替えヘルパー
 function showOnlySection(targetSection) {
     // 親の .upload-box が画像選択時に非表示になっている場合は再表示する
