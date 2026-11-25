@@ -8,6 +8,7 @@ import time
 from collections import deque
 from dotenv import load_dotenv
 from google import genai
+from google.genai import types
 from google.genai.errors import ClientError, ServerError
 from PIL import Image, ImageChops, ImageFilter, ImageOps
 
