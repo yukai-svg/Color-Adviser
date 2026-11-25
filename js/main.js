@@ -362,3 +362,74 @@ if (topBtnEl) {
         window.scrollTo({ top: 0, behavior: "smooth" });
     });
 }
+const privacyModal =
+    document.getElementById("privacyModal");
+
+const termsModal =
+    document.getElementById("termsModal");
+
+/* プライバシー */
+document
+    .getElementById("privacyLink")
+    .addEventListener("click", (e) => {
+
+        e.preventDefault();
+
+        privacyModal.style.display =
+            "flex";
+
+    });
+
+/* 利用規約 */
+document
+    .getElementById("termsLink")
+    .addEventListener("click", (e) => {
+
+        e.preventDefault();
+
+        termsModal.style.display =
+            "flex";
+
+    });
+
+/* プライバシー閉じる */
+document
+    .getElementById("closePrivacy")
+    .addEventListener("click", () => {
+
+        privacyModal.style.display =
+            "none";
+
+    });
+
+/* 利用規約閉じる */
+document
+    .getElementById("closeTerms")
+    .addEventListener("click", () => {
+
+        termsModal.style.display =
+            "none";
+
+    });
+
+/* モーダル外クリック */
+window.addEventListener(
+    "click",
+    (e) => {
+
+        if (e.target === privacyModal) {
+
+            privacyModal.style.display =
+                "none";
+
+        }
+
+        if (e.target === termsModal) {
+
+            termsModal.style.display =
+                "none";
+
+        }
+
+    }
+);

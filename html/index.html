@@ -267,13 +267,111 @@
 </main>
 
 <footer class="footer">
+
     <div>© 2026 Color Adviser</div>
 
     <div class="footer-links">
-        <a href="#">プライバシー</a>
-        <a href="#">利用規約</a>
+        <a href="#" id="privacyLink">
+            プライバシー
+        </a>
+
+        <a href="#" id="termsLink">
+            利用規約
+        </a>
     </div>
+
 </footer>
+
+<!-- プライバシーポリシー -->
+<div class="modal" id="privacyModal">
+
+    <div class="modal-content">
+
+        <h3>プライバシーポリシー</h3>
+
+        <div class="policy-text">
+
+            <p>
+                本サービスにアップロードされた画像および入力された情報は、
+                カラーパレット生成および画像処理の目的にのみ利用します。
+            </p>
+
+            <p>
+                登録されたメールアドレスおよびユーザー情報は、
+                ログイン機能およびサービス提供のために利用します。
+            </p>
+
+            <p>
+                当サービス運営者は、アップロードされた画像、
+                生成結果および入力データをAIモデルの学習には利用しません。
+            </p>
+
+            <p>
+                取得した情報を第三者へ提供することはありません。
+            </p>
+
+        </div>
+
+        <div class="modal-buttons">
+
+            <button
+                class="cancel-btn"
+                id="closePrivacy">
+
+                閉じる
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- 利用規約 -->
+<div class="modal" id="termsModal">
+
+    <div class="modal-content">
+
+        <h3>利用規約</h3>
+
+        <div class="policy-text">
+
+            <p>
+                本サービスは卒業研究を目的として提供されています。
+            </p>
+
+            <p>
+                著作権や肖像権を侵害する画像の利用は禁止します。
+            </p>
+
+            <p>
+                公序良俗に反する目的での利用は禁止します。
+            </p>
+
+            <p>
+                利用者がアップロードした画像に関する責任は、
+                利用者本人が負うものとします。
+            </p>
+
+        </div>
+
+        <div class="modal-buttons">
+
+            <button
+                class="cancel-btn"
+                id="closeTerms">
+
+                閉じる
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
 
 <button class="top-btn"id="topBtn">↑</button>
 
