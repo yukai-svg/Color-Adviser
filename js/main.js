@@ -1,5 +1,5 @@
 const API_BASE_URL =
-    "http://127.0.0.1:8000";
+    "https://glorious-space-memory-wv7qwqxvvx77hq66-8000.app.github.dev";
 
 // 画面要素の取得
 const uploadBoxEl = document.querySelector(".upload-box");
@@ -20,6 +20,8 @@ const themeInputEl = document.querySelector('.form-row input[type="text"]:not(#c
 
 const decideBtnEl = document.querySelector(".decide-btn");
 const generateBtnEl = document.querySelector(".generate-btn");
+generateBtnEl.disabled = true;
+
 const paletteBtnsEl = document.querySelectorAll(".palette-btn");
 
 // 状態管理変数
@@ -124,9 +126,9 @@ function handleFileSelected(file) {
             imageArea = document.createElement("div");
             imageArea.className = "selected-image-area";
             document.querySelector(".tool-section").insertBefore(
-                imageArea,
-                document.querySelector(".form-row")
-            );
+    imageArea,
+    paletteContentEl
+);
         }
 
         imageArea.innerHTML = `
@@ -178,9 +180,28 @@ if (uploadBoxEl) {
 if (decideBtnEl) {
     decideBtnEl.addEventListener("click", async () => {
         const mainColor = (colorCodeEl && colorCodeEl.value) ? colorCodeEl.value : "#FF130A";
+const imageArea =
+    document.querySelector(
+        ".selected-image-area"
+    );
 
-        showOnlySection(loadingContentEl);
+if (imageArea) {
 
+    imageArea.style.display =
+        "none";
+
+}
+
+generateBtnEl.disabled = true;
+
+generateBtnEl.textContent =
+    "パレット生成中...";
+
+showOnlySection(
+    loadingContentEl
+);
+    
+  
         try {
             const formData = new FormData();
             formData.append("main_color", mainColor);
@@ -230,9 +251,33 @@ if (decideBtnEl) {
             });
 
             // デフォルトで1つ目（補色パレット）を選択状態にする
-            selectPaletteButton(0);
+        // デフォルトで1つ目（補色パレット）を選択状態にする
+selectPaletteButton(0);
 
-            showOnlySection(paletteContentEl);
+/* ローディング非表示 */
+loadingContentEl.style.display =
+    "none";
+
+/* 画像再表示 */
+if (imageArea) {
+
+    imageArea.style.display =
+        "block";
+
+}
+uploadBoxEl.style.display =
+    "none";
+/* パレット表示 */
+paletteContentEl.style.display =
+    "block";
+
+/* 色を塗るボタン有効化 */
+generateBtnEl.disabled =
+    false;
+
+generateBtnEl.textContent =
+    "🎨 色を塗る";
+
         } catch (err) {
             alert(`エラー: ${err.message}`);
             if (selectedFile && uploadBoxEl) {
@@ -297,7 +342,32 @@ if (generateBtnEl) {
         }
 
         const themeText = themeInputEl ? themeInputEl.value.trim() : "";
+        uploadBoxEl.style.display =
+    "flex";
+const imageArea =
+    document.querySelector(
+        ".selected-image-area"
+    );
 
+if (imageArea) {
+
+    imageArea.style.display =
+        "none";
+
+}
+
+paletteContentEl.style.display =
+    "none";
+
+document.querySelector(
+    ".form-row"
+).style.display =
+    "none";
+
+document.querySelector(
+    ".generate-wrap"
+).style.display =
+    "none";
         showOnlySection(coloringContentEl);
 
         try {
