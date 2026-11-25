@@ -81,50 +81,37 @@
 <div class="upload-box">
 
     <!-- 通常表示 -->
-    <div class="upload-content"id="uploadContent">
+    <div class="upload-content" id="uploadContent">
+
         <div class="upload-icon">
 
-<svg width="70" height="70" viewBox="0 0 24 24" fill="none">
-    <path d="M12 2V13"
-          stroke="#C4C4C4"
-          stroke-width="1.8"
-          stroke-linecap="round"/>
+            <svg width="70" height="70" viewBox="0 0 24 24" fill="none">
+                ...
+            </svg>
 
-    <path d="M8 6L12 2L16 6"
-          stroke="#C4C4C4"
-          stroke-width="1.8"
-          stroke-linecap="round"
-          stroke-linejoin="round"/>
-
-    <path d="M4 15V19C4 20.1 4.9 21 6 21H18C19.1 21 20 20.1 20 19V15"
-          stroke="#C4C4C4"
-          stroke-width="1.8"
-          stroke-linecap="round"
-          stroke-linejoin="round"/>
-</svg>
-
-</div>
+        </div>
 
         <p>画像をドロップ、または</p>
 
-<input
-    type="file"
-    id="imageUpload"
-    accept="image/*"
-    hidden>
+        <input
+            type="file"
+            id="imageUpload"
+            accept="image/*"
+            hidden>
 
-<button
-    class="upload-btn"
-    id="uploadBtn">
+        <button
+            class="upload-btn"
+            id="uploadBtn">
 
-    画像ファイルをアップロード
+            画像ファイルをアップロード
 
-</button>
+        </button>
 
     </div>
 
-    <!-- ロード中表示 -->
+    <!-- パレット生成中 -->
     <div class="loading-content">
+
         <div class="spinner"></div>
 
         <h3>カラーパレットを生成中...</h3>
@@ -134,97 +121,122 @@
             そのまましばらくお待ちください。
         </p>
 
-        <p class="complete-msg">
-            ✓ 画像のアップロードが完了しました
+        <p class="waiting-message">
+            パレット生成完了後に
+            「🎨 色を塗る」が利用できます
         </p>
+
     </div>
 
-<!-- 結果表示 -->
+    <!-- 着色中 -->
+    <div class="coloring-content">
+
+        <div class="spinner"></div>
+
+        <h3>カラー着色中...</h3>
+
+        <p>
+            AIが画像を着色しています。<br>
+            そのまましばらくお待ちください。
+        </p>
+
+    </div>
+
+</div>
+
+<!-- パレット表示 -->
 <div class="palette-content">
 
     <div class="palette-list">
 
         <button class="palette-btn">
-    補色パレット：
-    <span class="color-box"></span>
-    <span class="color-box"></span>
-    <span class="color-box"></span>
-</button>
+            補色パレット：
+            <span class="color-box"></span>
+            <span class="color-box"></span>
+            <span class="color-box"></span>
+        </button>
 
         <button class="palette-btn">
             類似色パレット：
             <span class="color-box"></span>
-    <span class="color-box"></span>
-    <span class="color-box"></span>
+            <span class="color-box"></span>
+            <span class="color-box"></span>
         </button>
 
         <button class="palette-btn">
             三色配色パレット：
             <span class="color-box"></span>
-    <span class="color-box"></span>
-    <span class="color-box"></span>
+            <span class="color-box"></span>
+            <span class="color-box"></span>
         </button>
 
-        <button class="palette-btn" id="aiAutoPaletteBtn">
+        <button
+            class="palette-btn"
+            id="aiAutoPaletteBtn">
+
             ✨ メインカラーのみ（残りはAIにおまかせ）
+
         </button>
 
     </div>
 
 </div>
-<div class="coloring-content">
 
-    <div class="spinner"></div>
-
-    <h3>カラー着色中...</h3>
-
-    <p>
-        AIが画像を着色しています。<br>
-        そのまましばらくお待ちください。
-    </p>
-
-    <p class="complete-msg">
-        ✓ 選択したパレットを適用しました
-    </p>
-
-</div>
 <!-- 着色結果 -->
 <div class="colored-result-content">
 
     <div class="result-images">
 
         <div class="before-image">
+
             <p>着色前</p>
 
             <div class="image-box">
                 画像
             </div>
+
         </div>
 
         <div class="after-image">
+
             <p>着色後</p>
 
             <div class="image-box">
                 画像
             </div>
+
         </div>
 
     </div>
 
     <div class="selected-palette">
+
         <span>使用パレット：</span>
 
         <div class="color-box"></div>
         <div class="color-box"></div>
         <div class="color-box"></div>
+
     </div>
 
+    <div
+        class="explanation-box"
+        style="
+            margin-top:16px;
+            padding:14px;
+            background:#f8f9fa;
+            border-radius:8px;
+            text-align:left;
+            line-height:1.7;
+        ">
 
-    <div class="explanation-box" style="margin-top: 16px; padding: 14px; background: #f8f9fa; border-radius: 8px; text-align: left; line-height: 1.7;">
         <strong>💡 AI配色アドバイス：</strong>
-        <p id="aiExplanation" style="margin: 6px 0 0;"></p>
+
+        <p id="aiExplanation"></p>
+
     </div>
 
+</div>
 
     
 </div>
